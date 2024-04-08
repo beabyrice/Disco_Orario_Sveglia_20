@@ -3,5 +3,17 @@
     <style name="Base.Theme.Disco_Orario_Sveglia_20" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/primaryColorDark</item>
+        <item name="colorSecondary">@color/secondaryColorDark</item>
+        <item name="colorTertiary">@color/tertiaryColorDark</item>
+        <item name="colorAccent">@color/colorAccentDark</item>
+    </style>
+
+    <style name="BottomNavigation">
+        <item name="android:background">@color/secondaryColorDark</item>
+        <item name="itemIconTint">@color/colorAccentDark</item>
+        <item name="itemTextColor">@color/colorAccentDark</item>
+        <item name="paddingStart">10dp</item>
+        <item name="paddingEnd">10dp</item>
     </style>
 </resources>

@@ -3,7 +3,19 @@
     <style name="Base.Theme.Disco_Orario_Sveglia_20" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorTertiary">@color/tertiaryColor</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="Theme.Disco_Orario_Sveglia_20" parent="Base.Theme.Disco_Orario_Sveglia_20" />
+
+    <style name="BottomNavigation">
+        <item name="android:background">@color/secondaryColor</item>
+        <item name="itemIconTint">@color/colorAccent</item>
+        <item name="itemTextColor">@color/colorAccent</item>
+        <item name="paddingStart">10dp</item>
+        <item name="paddingEnd">10dp</item>
+    </style>
 </resources>
