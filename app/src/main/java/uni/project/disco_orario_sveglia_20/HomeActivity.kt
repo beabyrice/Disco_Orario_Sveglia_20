@@ -1,18 +1,10 @@
 package uni.project.disco_orario_sveglia_20
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import uni.project.disco_orario_sveglia_20.databinding.ActivityHomeBinding
-import uni.project.disco_orario_sveglia_20.databinding.ActivityMainBinding
+import uni.project.disco_orario_sveglia_20.map.MyCar
 
 class HomeActivity: AppCompatActivity(){
 
@@ -32,7 +24,6 @@ class HomeActivity: AppCompatActivity(){
 
             true
         }
-
     }
 
     private fun replaceFragment(fragment: Fragment){
