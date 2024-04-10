@@ -11,8 +11,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val backgroundColor = ContextCompat.getColor(this, R.color.primaryColor)
-
         // Set the background color programmatically
 
 

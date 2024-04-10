@@ -1,12 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Disco_Orario_Sveglia_20" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/primaryColor</item>
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorTertiary">@color/tertiaryColor</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorSwitchThumbNormal">@color/tertiaryColor</item>
+        <item name="android:fontFamily">@font/dmsans_regular</item>
     </style>
 
     <style name="Theme.Disco_Orario_Sveglia_20" parent="Base.Theme.Disco_Orario_Sveglia_20" />
@@ -17,5 +21,11 @@
         <item name="itemTextColor">@color/colorAccent</item>
         <item name="paddingStart">10dp</item>
         <item name="paddingEnd">10dp</item>
+    </style>
+
+    <style name="MyTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="boxBackgroundColor">@android:color/transparent</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
     </style>
 </resources>

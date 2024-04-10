@@ -1,8 +1,12 @@
 package uni.project.disco_orario_sveglia_20
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import uni.project.disco_orario_sveglia_20.alarm.CountDown
 import uni.project.disco_orario_sveglia_20.databinding.ActivityHomeBinding
 import uni.project.disco_orario_sveglia_20.map.MyCar
 
@@ -10,6 +14,7 @@ class HomeActivity: AppCompatActivity(){
 
     private lateinit var binding: ActivityHomeBinding
 
+    @SuppressLint("ResourceType", "UseRequireInsteadOfGet")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
