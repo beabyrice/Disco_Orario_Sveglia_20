@@ -12,4 +12,6 @@
     <color name="tertiaryColorDark">#A27B5C</color>
     <color name="colorAccentDark">#DCD7C9</color>
 
+    <color name="disabled">#C3BFBB</color>
+
 </resources>
