@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         autoBtn.background.setTint(getColor(R.color.colorAccent))
     }
     private fun enableManualInsertion() {
-        manualEditText.inputType = InputType.TYPE_DATETIME_VARIATION_TIME
+        manualEditText.inputType = InputType.TYPE_CLASS_DATETIME
         manualEditText.isFocusable = true
         manualEditText.isFocusableInTouchMode = true
         manualEditText.setHintTextColor(getColor(R.color.colorAccent))
