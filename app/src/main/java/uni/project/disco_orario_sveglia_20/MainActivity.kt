@@ -1,31 +1,59 @@
 package uni.project.disco_orario_sveglia_20
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Looper
 import android.text.InputType
-import android.view.View
 import android.widget.Button
-import android.widget.CompoundButton
 import android.widget.EditText
-import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.content.ContextCompat
-import java.time.LocalDateTime
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLng
+import uni.project.disco_orario_sveglia_20.db.ParkingDatabase
+import uni.project.disco_orario_sveglia_20.model.Parking
+import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
+import uni.project.disco_orario_sveglia_20.viewModel.MainViewModel
+import uni.project.disco_orario_sveglia_20.viewModel.ViewModelFactory
 import java.time.LocalTime
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: MainViewModel
     private lateinit var manualEditText : EditText
+    private lateinit var durationEditText : EditText
     private lateinit var autoBtn : Button
+    private lateinit var confirm : Button
     private lateinit var switchCompat : SwitchCompat
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var currentLatLong : LatLng
+    private var currentTime = 0L
+    private var parkingDuration = 0L
+
+    companion object{
+        private const val LOCATION_CODE = 1
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setUpViewModel()
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
 
         manualEditText = findViewById(R.id.manualEditText)
+        durationEditText = findViewById(R.id.durationEditText)
         autoBtn = findViewById(R.id.autoTimeBt)
+        confirm = findViewById(R.id.manualTimeBt)
         switchCompat = findViewById(R.id.switch1)
         switchCompat.setThumbResource(R.drawable.switch_thumb_custom)
         switchCompat.setTrackResource(R.drawable.switch_track_custom)
@@ -36,9 +64,22 @@ class MainActivity : AppCompatActivity() {
         // Set the background color programmatically
 
         autoBtn.setOnClickListener {
-            val currentTime = LocalTime.now()
-            val currentHour = currentTime.hour
-            val currentMinutes = currentTime.minute
+            currentTime = LocalTime.now().toSecondOfDay() * 1000L
+        }
+
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        confirm.setOnClickListener {
+
+            parkingDuration = ((durationEditText.text.toString().toInt()) * 3600 * 1000L)
+            setUpMap()
+            viewModel.upsertParking(
+                Parking(
+                    latitude = currentLatLong.latitude,
+                    longitude = currentLatLong.longitude,
+                    arrivalTime = currentTime,
+                    parkingDuration = parkingDuration
+                )
+            )
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
         }
@@ -64,4 +105,31 @@ class MainActivity : AppCompatActivity() {
         autoBtn.isClickable = false
         autoBtn.background.setTint(getColor(R.color.disabled))
     }
+
+    private fun setUpMap() {
+        if (ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_CODE
+            )
+            return
+        }
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener(this) { location ->
+            if(location!= null){
+                currentLatLong = LatLng(location.latitude, location.longitude)
+            }
+        }
+    }
+
+    private fun setUpViewModel(){
+        val parkingRepository = ParkingRepository(ParkingDatabase(this))
+        val viewModelProviderFactory = ViewModelFactory(application,parkingRepository)
+        viewModel = ViewModelProvider(this,viewModelProviderFactory)[MainViewModel::class.java]
+    }
+
 }

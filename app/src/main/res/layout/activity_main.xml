@@ -126,7 +126,6 @@
         android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:backgroundTint="#C3BFBB"
-        android:clickable="false"
         android:elevation="30dp"
         android:text="Confirm"
         android:textColor="@color/primaryColor"

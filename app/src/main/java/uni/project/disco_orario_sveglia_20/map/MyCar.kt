@@ -38,7 +38,6 @@ import uni.project.disco_orario_sveglia_20.R
 class MyCar : Fragment(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
-    private lateinit var spotManager: CarSpotManager
     private lateinit var lastLocation: Location
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -56,8 +55,6 @@ class MyCar : Fragment(), OnMapReadyCallback {
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
-        spotManager = CarSpotManager(requireContext())
 
         fusedLocationProviderClient =
             LocationServices.getFusedLocationProviderClient(requireContext())
@@ -90,7 +87,6 @@ class MyCar : Fragment(), OnMapReadyCallback {
         mMap.isMyLocationEnabled = true
         fusedLocationProviderClient.lastLocation.addOnSuccessListener(requireActivity()) { location ->
             if(location!= null){
-                spotManager.saveSpot(location)
                 lastLocation = location
                 val currentLatLong = LatLng(location.latitude, location.longitude)
                 placeMarkerOnMap(currentLatLong)

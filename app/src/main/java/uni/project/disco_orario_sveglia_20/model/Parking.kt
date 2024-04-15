@@ -1,4 +1,4 @@
-package uni.project.disco_orario_sveglia_20.db
+package uni.project.disco_orario_sveglia_20.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -7,14 +7,14 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "parking_session")
 data class Parking(
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Int = 0,
 
     @ColumnInfo(name = "latitude")
-    val latitude: Float,
+    val latitude: Double,
 
     @ColumnInfo(name = "longitude")
-    val longitude: Float,
+    val longitude: Double,
 
     @ColumnInfo(name = "arrival_time")
     val arrivalTime: Long,
