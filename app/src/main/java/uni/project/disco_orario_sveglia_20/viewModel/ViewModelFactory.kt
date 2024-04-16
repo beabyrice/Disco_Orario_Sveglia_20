@@ -11,6 +11,14 @@ class ViewModelFactory(
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MainViewModel(application,parkingRepository) as T
+        return when {
+            modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
+                HomeViewModel(application, parkingRepository) as T
+            }
+            modelClass.isAssignableFrom(ParkingViewModel::class.java) -> {
+                ParkingViewModel(application, parkingRepository) as T
+            }
+            else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+        }
     }
 }

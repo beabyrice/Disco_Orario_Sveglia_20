@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/countDown">
+
+    <fragment
+        android:id="@+id/countDown"
+        android:name="uni.project.disco_orario_sveglia_20.alarm.CountDownFragment"
+        android:label="fragment_count_down"
+        tools:layout="@layout/fragment_count_down" >
+        <action
+            android:id="@+id/action_countDown_to_myCar"
+            app:destination="@id/myCar" />
+    </fragment>
+    <fragment
+        android:id="@+id/myCar"
+        android:name="uni.project.disco_orario_sveglia_20.map.MyCarFragment"
+        android:label="fragment_my_car"
+        tools:layout="@layout/fragment_my_car" >
+        <action
+            android:id="@+id/action_myCar_to_countDown"
+            app:destination="@id/countDown" />
+    </fragment>
+</navigation>
