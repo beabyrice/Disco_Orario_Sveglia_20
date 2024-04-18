@@ -3,6 +3,7 @@ package uni.project.disco_orario_sveglia_20.viewModel
 import android.Manifest
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -12,6 +13,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
+import uni.project.disco_orario_sveglia_20.ParkingDataActivity
 import uni.project.disco_orario_sveglia_20.model.Parking
 import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
 import java.time.LocalTime
@@ -63,11 +65,11 @@ class HomeViewModel(
     }
 
     private fun setParkingDuration(duration: String){
-        parkingDuration = ((duration.toInt()) * 3600 * 1000L)
+        parkingDuration = ((duration.toInt()) * 3600 * 1000).toLong()
     }
 
     fun setCurrentTime(){
-        currentTime = LocalTime.now().toSecondOfDay() * 1000L
+        currentTime = (LocalTime.now().toSecondOfDay() * 1000).toLong()
     }
 
     fun completeSetting(duration : String){

@@ -1,5 +1,9 @@
 package uni.project.disco_orario_sveglia_20.alarm
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -8,47 +12,49 @@ import uni.project.disco_orario_sveglia_20.ParkingDataActivity
 import uni.project.disco_orario_sveglia_20.R
 import uni.project.disco_orario_sveglia_20.databinding.FragmentCountDownBinding
 import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
+import java.lang.Exception
 import java.text.DecimalFormat
-import kotlin.math.roundToInt
+import kotlin.time.Duration
 
 class CountDownFragment : Fragment(R.layout.fragment_count_down) {
 
     private lateinit var viewModel: ParkingViewModel
     private lateinit var binding: FragmentCountDownBinding
+    private var duration: Long = 0
 
+    private var progressTime : Float = 0f
 
-    private val testTime = 60
-    private val clockTime = (testTime * 1000).toLong()
-    private val progressTime = (clockTime/1000).toFloat()
-
-
+    private lateinit var broadcastReceiver : BroadcastReceiver
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding =FragmentCountDownBinding.bind(view)
 
         viewModel = (activity as ParkingDataActivity).viewModel
 
-        val tickInterval : Long = 1000
-        val timer = CountDownTimer(clockTime,tickInterval)
-        var secondsLeft = 0
-        timer.onTick = { millisUntilFinished ->
-            val currentSec = (millisUntilFinished/1000.0f).roundToInt()
-            if(currentSec != secondsLeft){
-                secondsLeft = currentSec
+        val sharedPref = (activity as ParkingDataActivity).getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        viewModel.getParkingDuration()?.let {
+            sharedPref.edit().putLong("durationInMillis", it).apply()
+            duration = it
+            progressTime = (duration/1000).toFloat()
+        }
 
-                timerFormat(secondsLeft,binding.textClock)
-
+        broadcastReceiver = object : BroadcastReceiver(){
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent != null) {
+                    timerFormat(intent,duration,binding.textClock)
+                }
             }
+
         }
-        timer.onFinish = {
-            //TODO: alarm intent here ! or notification.. ask professor
-            binding.textClock.text = "00:00:00"
-        }
+
+        val intent = Intent((activity as ParkingDataActivity),CountDownTimerService::class.java)
+
+        (activity as ParkingDataActivity).startService(intent)
 
         binding.progressBar.max = progressTime.toInt()
         binding.progressBar.progress = progressTime.toInt()
-        timer.startTimer()
 
         binding.button.setOnClickListener {
             viewModel.deleteParking()
@@ -58,16 +64,42 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
 
     }
 
-    private fun timerFormat(secondsLeft: Int, textView: TextView) {
+    private fun timerFormat(intent: Intent, secondsLeft: Long, textView: TextView) {
+        if(intent.extras != null){
+            val millisUntilFinished = intent.getLongExtra("countdown", secondsLeft)
+            binding.progressBar.progress = (millisUntilFinished/1000).toFloat().toInt()
 
-        binding.progressBar.progress = secondsLeft
-        val decimalFormat = DecimalFormat("00")
-        val hours = secondsLeft/3600
-        val minutes = (secondsLeft%3600)/60
-        val seconds = secondsLeft%60
+            val hours = (millisUntilFinished/1000)/3600
+            val minutes = ((millisUntilFinished/1000)%3600)/60
+            val seconds = (millisUntilFinished/1000)%60
 
-        val timeFormat = decimalFormat.format(hours) + ":" + decimalFormat.format(minutes) + ":" + decimalFormat.format(seconds)
-        textView.text = timeFormat
+            val timeFormat = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+            textView.text = timeFormat
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as ParkingDataActivity).registerReceiver(broadcastReceiver, IntentFilter(CountDownTimerService.COUNTDOWN_BR))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as ParkingDataActivity).unregisterReceiver(broadcastReceiver)
+    }
+
+    override fun onStop() {
+        try {
+            (activity as ParkingDataActivity).unregisterReceiver(broadcastReceiver)
+        } catch (e: Exception) {
+            //
+        }
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        (activity as ParkingDataActivity).stopService(Intent((activity as ParkingDataActivity),CountDownTimerService::class.java))
+        super.onDestroy()
     }
 
 }
