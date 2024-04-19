@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import uni.project.disco_orario_sveglia_20.ParkingDataActivity
 import uni.project.disco_orario_sveglia_20.model.Parking
@@ -51,7 +52,6 @@ class HomeViewModel(
             location?.let {
                 currentLocation = LatLng(location.latitude,location.longitude)
             }
-
         }
     }
 
@@ -68,6 +68,10 @@ class HomeViewModel(
         parkingDuration = ((duration.toInt()) * 3600 * 1000).toLong()
     }
 
+    fun setTimeFromUser(time: String){
+        currentTime = time.toLong()
+    }
+
     fun setCurrentTime(){
         currentTime = (LocalTime.now().toSecondOfDay() * 1000).toLong()
     }
@@ -77,15 +81,9 @@ class HomeViewModel(
     }
 
     fun upsertParking(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val parking = getParking()
             parkingRepository.upsertParking(parking)
-        }
-    }
-
-    fun deleteParking(parking: Parking){
-        viewModelScope.launch {
-            parkingRepository.deleteParking(parking)
         }
     }
 

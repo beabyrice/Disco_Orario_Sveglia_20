@@ -43,7 +43,7 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
         broadcastReceiver = object : BroadcastReceiver(){
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (intent != null) {
-                    timerFormat(intent,duration,binding.textClock)
+                    updateUI(intent,duration,binding.textClock)
                 }
             }
 
@@ -52,6 +52,8 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
         val intent = Intent((activity as ParkingDataActivity),CountDownTimerService::class.java)
 
         (activity as ParkingDataActivity).startService(intent)
+
+        binding.arrivalTime.text = viewModel.getArrivalTime()?.let { viewModel.timerFormat(it) }
 
         binding.progressBar.max = progressTime.toInt()
         binding.progressBar.progress = progressTime.toInt()
@@ -64,17 +66,12 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
 
     }
 
-    private fun timerFormat(intent: Intent, secondsLeft: Long, textView: TextView) {
+    private fun updateUI(intent: Intent, secondsLeft: Long, textView: TextView) {
         if(intent.extras != null){
             val millisUntilFinished = intent.getLongExtra("countdown", secondsLeft)
             binding.progressBar.progress = (millisUntilFinished/1000).toFloat().toInt()
 
-            val hours = (millisUntilFinished/1000)/3600
-            val minutes = ((millisUntilFinished/1000)%3600)/60
-            val seconds = (millisUntilFinished/1000)%60
-
-            val timeFormat = String.format("%02d:%02d:%02d", hours, minutes, seconds)
-            textView.text = timeFormat
+            textView.text = viewModel.timerFormat(millisUntilFinished)
         }
     }
 

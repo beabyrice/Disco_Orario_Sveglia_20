@@ -14,6 +14,7 @@ interface ParkingDao {
     @Delete
     suspend fun deleteParkingSession(parkingSession : Parking)
 
+    //TODO: delete id
     @Query("SELECT * FROM parking_session WHERE id = :id")
     suspend fun getParking(id: Int = 0) : Parking
 

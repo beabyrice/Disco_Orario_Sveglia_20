@@ -14,13 +14,14 @@ import uni.project.disco_orario_sveglia_20.db.ParkingDatabase
 import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
 import uni.project.disco_orario_sveglia_20.viewModel.HomeViewModel
 import uni.project.disco_orario_sveglia_20.viewModel.ViewModelFactory
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var manualEditText : EditText
     private lateinit var durationEditText : EditText
-    private lateinit var autoBtn : Button
     private lateinit var confirm : Button
     private lateinit var switchCompat : SwitchCompat
 
@@ -32,14 +33,13 @@ class HomeActivity : AppCompatActivity() {
         setUpViews()
         setUpViewModel()
         viewModel.setFusedLocationProvider(this)
-
-        autoBtn.setOnClickListener {
-            viewModel.setCurrentTime()
-        }
-
-        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-
+        
         confirm.setOnClickListener {
+            if(switchCompat.isChecked){
+                viewModel.setTimeFromUser(manualEditText.text.toString())
+            }else{
+                viewModel.setCurrentTime()
+            }
             viewModel.completeSetting(durationEditText.text.toString())
             viewModel.upsertParking()
             val intent = Intent(this, ParkingDataActivity::class.java)
@@ -50,8 +50,8 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setUpViews(){
         manualEditText = findViewById(R.id.manualEditText)
+        manualEditText.hint = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")).toString()
         durationEditText = findViewById(R.id.durationEditText)
-        autoBtn = findViewById(R.id.autoTimeBt)
         confirm = findViewById(R.id.manualTimeBt)
         switchCompat = findViewById(R.id.switch1)
         switchCompat.setThumbResource(R.drawable.switch_thumb_custom)
@@ -75,9 +75,6 @@ class HomeActivity : AppCompatActivity() {
             setHintTextColor(getColor(R.color.disabled))
             background = AppCompatResources.getDrawable(activity,R.drawable.input_bg_disabled)
         }
-
-        autoBtn.isClickable = true
-        autoBtn.background.setTint(getColor(R.color.colorAccent))
     }
 
     private fun enableManualInsertion(activity: Activity) {
@@ -88,9 +85,6 @@ class HomeActivity : AppCompatActivity() {
             setHintTextColor(getColor(R.color.colorAccent))
             background = AppCompatResources.getDrawable(activity,R.drawable.input_barckground)
         }
-
-        autoBtn.isClickable = false
-        autoBtn.background.setTint(getColor(R.color.disabled))
     }
 
     private fun setUpViewModel(){
