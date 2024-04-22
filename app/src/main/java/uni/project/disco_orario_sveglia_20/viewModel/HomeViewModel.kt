@@ -4,7 +4,9 @@ import android.Manifest
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.DialogInterface.OnCancelListener
 import android.content.pm.PackageManager
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.AndroidViewModel
@@ -24,6 +26,9 @@ class HomeViewModel(
     app: Application,
     private val parkingRepository: ParkingRepository
 ) : AndroidViewModel(app){
+    companion object{
+        const val TAG = "HomeViewModel"
+    }
 
     private val FINE_PERMISSION_CODE = 1
     private lateinit var currentLocation : LatLng
@@ -52,7 +57,9 @@ class HomeViewModel(
         task.addOnSuccessListener {location ->
             location?.let {
                 currentLocation = LatLng(location.latitude,location.longitude)
-            }
+            }?: run{
+                Log.d(TAG, "entrato")
+        }
         }
     }
 

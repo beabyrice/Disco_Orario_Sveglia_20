@@ -31,7 +31,7 @@ class MyCarFragment : Fragment(R.layout.fragment_my_car), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
         binding =FragmentMyCarBinding.bind(view)
 
-        viewModel = (activity as ParkingDataActivity).viewModel
+        viewModel = (activity as ParkingDataActivity).parkingViewModel
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
         mapFragment.getMapAsync(this)

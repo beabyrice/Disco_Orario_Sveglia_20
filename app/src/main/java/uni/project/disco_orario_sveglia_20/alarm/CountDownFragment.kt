@@ -13,8 +13,6 @@ import uni.project.disco_orario_sveglia_20.R
 import uni.project.disco_orario_sveglia_20.databinding.FragmentCountDownBinding
 import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
 import java.lang.Exception
-import java.text.DecimalFormat
-import kotlin.time.Duration
 
 class CountDownFragment : Fragment(R.layout.fragment_count_down) {
 
@@ -31,7 +29,7 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
 
         binding =FragmentCountDownBinding.bind(view)
 
-        viewModel = (activity as ParkingDataActivity).viewModel
+        viewModel = (activity as ParkingDataActivity).parkingViewModel
 
         val sharedPref = (activity as ParkingDataActivity).getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         viewModel.getParkingDuration()?.let {
