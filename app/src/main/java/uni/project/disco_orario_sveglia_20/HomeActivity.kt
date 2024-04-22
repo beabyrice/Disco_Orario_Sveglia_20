@@ -7,11 +7,13 @@ import android.os.Bundle
 import android.text.InputType
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.ViewModelProvider
 import uni.project.disco_orario_sveglia_20.db.ParkingDatabase
 import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
+import uni.project.disco_orario_sveglia_20.repository.TimeRepository
 import uni.project.disco_orario_sveglia_20.viewModel.HomeViewModel
 import uni.project.disco_orario_sveglia_20.viewModel.ViewModelFactory
 import java.time.LocalTime
@@ -35,15 +37,24 @@ class HomeActivity : AppCompatActivity() {
         viewModel.setFusedLocationProvider(this)
         
         confirm.setOnClickListener {
-            if(switchCompat.isChecked){
-                viewModel.setTimeFromUser(manualEditText.text.toString())
-            }else{
-                viewModel.setCurrentTime()
+            if(
+                (TimeRepository.isValidTime(manualEditText.hint.toString()) || TimeRepository.isValidTime(manualEditText.text.toString()))
+                && TimeRepository.isValidTime(durationEditText.text.toString()))
+            {
+                if(switchCompat.isChecked){
+
+                    viewModel.setTimeFromUser(manualEditText.text.toString())
+                }else{
+                    viewModel.setCurrentTime()
+                }
+                viewModel.completeSetting(durationEditText.text.toString())
+                viewModel.upsertParking()
+                val intent = Intent(this, ParkingDataActivity::class.java)
+                startActivity(intent)
+                //finish()
+            } else {
+                Toast.makeText(this, "wrong format input", Toast.LENGTH_LONG).show()
             }
-            viewModel.completeSetting(durationEditText.text.toString())
-            viewModel.upsertParking()
-            val intent = Intent(this, ParkingDataActivity::class.java)
-            startActivity(intent)
         }
 
     }
@@ -56,7 +67,7 @@ class HomeActivity : AppCompatActivity() {
         switchCompat = findViewById(R.id.switch1)
         switchCompat.setThumbResource(R.drawable.switch_thumb_custom)
         switchCompat.setTrackResource(R.drawable.switch_track_custom)
-        switchCompat.setOnCheckedChangeListener { button, isChecked ->
+        switchCompat.setOnCheckedChangeListener { button, _ ->
             if(button.isChecked) enableManualInsertion(this)
             else backToAutomaticInsertion(this)
         }
@@ -69,7 +80,6 @@ class HomeActivity : AppCompatActivity() {
 
     private fun backToAutomaticInsertion(activity: Activity){
         manualEditText.apply {
-            inputType = InputType.TYPE_NULL
             isFocusable = false
             isFocusableInTouchMode = false
             setHintTextColor(getColor(R.color.disabled))
@@ -79,7 +89,6 @@ class HomeActivity : AppCompatActivity() {
 
     private fun enableManualInsertion(activity: Activity) {
         manualEditText.apply {
-            inputType = InputType.TYPE_CLASS_DATETIME
             isFocusable = true
             isFocusableInTouchMode = true
             setHintTextColor(getColor(R.color.colorAccent))

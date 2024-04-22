@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import uni.project.disco_orario_sveglia_20.ParkingDataActivity
 import uni.project.disco_orario_sveglia_20.model.Parking
 import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
+import uni.project.disco_orario_sveglia_20.repository.TimeRepository
 import java.time.LocalTime
 
 class HomeViewModel(
@@ -65,7 +66,7 @@ class HomeViewModel(
     }
 
     private fun setParkingDuration(duration: String){
-        parkingDuration = ((duration.toInt()) * 3600 * 1000).toLong()
+        parkingDuration = TimeRepository.getLongSecondsFromString(duration)
     }
 
     fun setTimeFromUser(time: String){
@@ -73,7 +74,7 @@ class HomeViewModel(
     }
 
     fun setCurrentTime(){
-        currentTime = (LocalTime.now().toSecondOfDay() * 1000).toLong()
+        currentTime = TimeRepository.getLongCurrentTime()
     }
 
     fun completeSetting(duration : String){
