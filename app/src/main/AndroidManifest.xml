@@ -2,10 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <queries>
         <package android:name="com.google.android.apps.maps"/>
@@ -37,7 +42,18 @@
             android:exported="false"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
+
         <service android:name=".alarm.CountDownTimerService"/>
+
+        <provider
+            android:authorities="uni.project.disco_orario_sveglia_20.FileProvider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+
+    </provider>
 
         <meta-data
             android:name="com.google.android.gms.version"

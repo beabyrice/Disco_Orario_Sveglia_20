@@ -5,7 +5,10 @@
     <item android:id="@+id/countDown"
         android:icon="@drawable/ic_baseline_access_alarm_24"
         android:title="" />
-    <item android:title="My Car"
+    <item android:id="@+id/camera"
+        android:icon="@drawable/baseline_photo_camera_24"
+        android:title="" />
+    <item android:title=""
         android:id="@+id/myCar"
         android:icon="@drawable/baseline_add_location_24"/>
 </menu>

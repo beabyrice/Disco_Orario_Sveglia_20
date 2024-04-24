@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_countDown_to_myCar"
             app:destination="@id/myCar" />
+        <action
+            android:id="@+id/action_countDown_to_camera"
+            app:destination="@id/camera" />
     </fragment>
     <fragment
         android:id="@+id/myCar"
@@ -21,6 +24,21 @@
         tools:layout="@layout/fragment_my_car" >
         <action
             android:id="@+id/action_myCar_to_countDown"
+            app:destination="@id/countDown" />
+        <action
+            android:id="@+id/action_myCar_to_camera"
+            app:destination="@id/camera" />
+    </fragment>
+    <fragment
+        android:id="@+id/camera"
+        android:name="uni.project.disco_orario_sveglia_20.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_camera_to_myCar"
+            app:destination="@id/myCar" />
+        <action
+            android:id="@+id/action_camera_to_countDown"
             app:destination="@id/countDown" />
     </fragment>
 </navigation>
