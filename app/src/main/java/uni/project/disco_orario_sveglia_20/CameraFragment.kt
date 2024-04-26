@@ -2,14 +2,10 @@ package uni.project.disco_orario_sveglia_20
 
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import androidx.fragment.app.Fragment
 import uni.project.disco_orario_sveglia_20.databinding.FragmentCameraBinding
 import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
 import java.io.File
@@ -22,6 +18,10 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     private lateinit var viewModel: ParkingViewModel
     private lateinit var binding: FragmentCameraBinding
     private lateinit var cameraExecutor: ExecutorService
+
+    companion object{
+        const val CAMERA_CODE = 2
+    }
 
     private val contract = registerForActivityResult(ActivityResultContracts.TakePicture()){
 
@@ -37,7 +37,9 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
 
         viewModel.update2(createImageUri())
         binding.captureButton.setOnClickListener {
+
             contract.launch(viewModel.selectedImageUri.value)
+
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()

@@ -16,6 +16,7 @@
         <package android:name="com.google.android.apps.maps"/>
     </queries>
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -44,6 +45,8 @@
             android:screenOrientation="portrait"/>
 
         <service android:name=".alarm.CountDownTimerService"/>
+
+        <receiver android:name=".alarm.AlarmReceiver"/>
 
         <provider
             android:authorities="uni.project.disco_orario_sveglia_20.FileProvider"

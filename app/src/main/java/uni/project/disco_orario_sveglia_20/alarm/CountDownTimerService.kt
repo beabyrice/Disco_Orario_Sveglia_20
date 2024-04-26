@@ -30,6 +30,8 @@ class CountDownTimerService: Service(){
 
             override fun onFinish() {
                 intent.putExtra("countdown", 0)
+                val alarmIntent = Intent(applicationContext, AlarmReceiver::class.java)
+                sendBroadcast(alarmIntent)
             }
 
         }

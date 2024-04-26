@@ -3,8 +3,6 @@ package uni.project.disco_orario_sveglia_20.viewModel
 import android.Manifest
 import android.app.Activity
 import android.app.Application
-import android.content.Context
-import android.content.DialogInterface.OnCancelListener
 import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.Toast
@@ -16,11 +14,10 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import uni.project.disco_orario_sveglia_20.ParkingDataActivity
+import uni.project.disco_orario_sveglia_20.CameraFragment
 import uni.project.disco_orario_sveglia_20.model.Parking
 import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
 import uni.project.disco_orario_sveglia_20.repository.TimeRepository
-import java.time.LocalTime
 
 class HomeViewModel(
     app: Application,
@@ -63,6 +60,21 @@ class HomeViewModel(
         }
     }
 
+    fun getCameraPermission(activity: Activity){
+        if (ActivityCompat.checkSelfPermission(
+                activity,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(Manifest.permission.CAMERA),
+                CameraFragment.CAMERA_CODE
+            )
+            getCameraPermission(activity)
+        }
+    }
+
     private fun getParking(): Parking{
         return Parking(
             latitude = currentLocation.latitude,
@@ -77,11 +89,11 @@ class HomeViewModel(
     }
 
     fun setTimeFromUser(time: String){
-        currentTime = time.toLong()
+        currentTime = TimeRepository.getLongSecondsFromString(time)
     }
 
-    fun setCurrentTime(){
-        currentTime = TimeRepository.getLongCurrentTime()
+    fun setCurrentTime(time: String){
+        currentTime = TimeRepository.getLongSecondsFromString(time)
     }
 
     fun completeSetting(duration : String){

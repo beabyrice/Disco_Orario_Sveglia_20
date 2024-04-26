@@ -2,11 +2,11 @@ package uni.project.disco_orario_sveglia_20
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.ViewModelProvider
@@ -14,7 +14,6 @@ import uni.project.disco_orario_sveglia_20.db.ParkingDatabase
 import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
 import uni.project.disco_orario_sveglia_20.repository.TimeRepository
 import uni.project.disco_orario_sveglia_20.viewModel.HomeViewModel
-import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
 import uni.project.disco_orario_sveglia_20.viewModel.ViewModelFactory
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -35,6 +34,7 @@ class HomeActivity : AppCompatActivity() {
         setUpViews()
         setUpViewModel()
         homeViewModel.setFusedLocationProvider(this)
+        homeViewModel.getCameraPermission(this)
         
         confirm.setOnClickListener {
             if(
@@ -45,8 +45,9 @@ class HomeActivity : AppCompatActivity() {
 
                     homeViewModel.setTimeFromUser(manualEditText.text.toString())
                 }else{
-                    homeViewModel.setCurrentTime()
+                    homeViewModel.setCurrentTime(manualEditText.hint.toString())
                 }
+
                 homeViewModel.completeSetting(durationEditText.text.toString())
                 homeViewModel.upsertParking()
                 val intent = Intent(this, ParkingDataActivity::class.java)
@@ -75,6 +76,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         homeViewModel.handlePermissionsResult(requestCode, grantResults, this)
     }
 
@@ -101,5 +103,7 @@ class HomeActivity : AppCompatActivity() {
         val viewModelProviderFactory = ViewModelFactory(application,parkingRepository)
         homeViewModel = ViewModelProvider(this,viewModelProviderFactory)[HomeViewModel::class.java]
     }
+
+
 
 }
