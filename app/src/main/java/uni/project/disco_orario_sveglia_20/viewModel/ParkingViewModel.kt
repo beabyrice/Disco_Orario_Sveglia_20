@@ -20,9 +20,21 @@ class ParkingViewModel(
     private val parkingRepository: ParkingRepository
 ) : AndroidViewModel(app) {
 
-    var imageUri : Uri? = null
+    private var _selectedImageUriFlow = MutableStateFlow<Uri?>(null)
+    val imageUri = _selectedImageUriFlow.asStateFlow()
     private var parkingFlow = MutableStateFlow<Parking?>(null)
     private val parking = parkingFlow.asStateFlow()
+    private var _imageUriFlow = MutableStateFlow<Uri?>(null)
+    val selectedImageUri = _imageUriFlow.asStateFlow()
+
+    fun update(uri: Uri?){
+        viewModelScope.launch(Dispatchers.IO) { _selectedImageUriFlow.update { uri } }
+
+    }
+
+    fun update2(uri:Uri?){
+        viewModelScope.launch(Dispatchers.IO) { _imageUriFlow.update { uri } }
+    }
 
     fun getParking(){
         viewModelScope.launch (Dispatchers.IO){

@@ -23,12 +23,9 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     private lateinit var binding: FragmentCameraBinding
     private lateinit var cameraExecutor: ExecutorService
 
-    private var _imageUriFlow = MutableStateFlow<Uri?>(null)
-    private val selectedImageUri = _imageUriFlow.asStateFlow()
-
     private val contract = registerForActivityResult(ActivityResultContracts.TakePicture()){
 
-        viewModel.imageUri = selectedImageUri.value
+        viewModel.update(viewModel.selectedImageUri.value)
 
     }
 
@@ -38,9 +35,9 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         binding = FragmentCameraBinding.bind(view)
         viewModel = (activity as ParkingDataActivity).parkingViewModel
 
-        _imageUriFlow.update { createImageUri() }
+        viewModel.update2(createImageUri())
         binding.captureButton.setOnClickListener {
-            contract.launch(selectedImageUri.value)
+            contract.launch(viewModel.selectedImageUri.value)
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -48,10 +45,8 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
 
     override fun onResume() {
         super.onResume()
-        viewModel.imageUri?.let {
+        viewModel.imageUri.value?.let {
             binding.imageView.setImageURI(it)
-            val parentLayout = binding.textView5.parent as ViewGroup
-            parentLayout.removeView(binding.textView5)
         }
 
     }
