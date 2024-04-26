@@ -2,6 +2,7 @@ package uni.project.disco_orario_sveglia_20.viewModel
 
 import android.app.Application
 import android.content.Intent
+import android.net.Uri
 import android.widget.TextView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +20,7 @@ class ParkingViewModel(
     private val parkingRepository: ParkingRepository
 ) : AndroidViewModel(app) {
 
+    var imageUri : Uri? = null
     private var parkingFlow = MutableStateFlow<Parking?>(null)
     private val parking = parkingFlow.asStateFlow()
 
