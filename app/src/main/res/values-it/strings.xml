@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Car Alarm</string>
+    <string name="insert_values_to_start">Inserire gli orari per iniziare</string>
+    <string name="welcome">Benvenuto!</string>
+    <string name="auto">A</string>
+    <string name="manual">M</string>
+    <string name="parking_duration_00_00">durata parcheggio 00:00</string>
+    <string name="confirm">Conferma</string>
+    <string name="take_a_photo">Clicca su \"Scatta\" per fare una foto</string>
+    <string name="capture">Scatta</string>
+    <string name="delete">Elimina</string>
+    <string name="arrival">Sei arrivato alle:</string>
+    <string name="expiring">"Scade tra "</string>
+</resources>

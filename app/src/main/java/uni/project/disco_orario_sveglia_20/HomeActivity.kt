@@ -3,6 +3,7 @@ package uni.project.disco_orario_sveglia_20
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.TypedValue
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -41,7 +42,7 @@ class HomeActivity : AppCompatActivity() {
                 (TimeRepository.isValidTime(manualEditText.hint.toString()) || TimeRepository.isValidTime(manualEditText.text.toString()))
                 && TimeRepository.isValidTime(durationEditText.text.toString()))
             {
-                if(switchCompat.isChecked){
+                if(switchCompat.isChecked && TimeRepository.isValidTime(manualEditText.text.toString())){
 
                     homeViewModel.setTimeFromUser(manualEditText.text.toString())
                 }else{
@@ -52,7 +53,7 @@ class HomeActivity : AppCompatActivity() {
                 homeViewModel.upsertParking()
                 val intent = Intent(this, ParkingDataActivity::class.java)
                 startActivity(intent)
-                //finish()
+                finish()
             } else {
                 Toast.makeText(this, "wrong format input", Toast.LENGTH_LONG).show()
             }
@@ -90,11 +91,14 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun enableManualInsertion(activity: Activity) {
+        val typedValue = TypedValue()
+        this.theme.resolveAttribute(androidx.appcompat.R.attr.colorAccent, typedValue,true)
+        val color = typedValue.resourceId
         manualEditText.apply {
             isFocusable = true
             isFocusableInTouchMode = true
-            setHintTextColor(getColor(R.color.colorAccent))
-            background = AppCompatResources.getDrawable(activity,R.drawable.input_barckground)
+            setHintTextColor(getColor(color))
+            background = AppCompatResources.getDrawable(activity,R.drawable.input_background)
         }
     }
 

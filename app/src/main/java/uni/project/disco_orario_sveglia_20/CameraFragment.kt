@@ -13,6 +13,8 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
+//TODO: not working correctly
+
 class CameraFragment : Fragment(R.layout.fragment_camera) {
 
     private lateinit var viewModel: ParkingViewModel

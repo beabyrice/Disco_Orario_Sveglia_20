@@ -28,7 +28,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="15dp"
-                    android:text="Click &quot;Capture&quot; to take a photo"
+                    android:text="@string/take_a_photo"
                     android:textSize="20sp" />
 
                 <Button
@@ -36,9 +36,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:backgroundTint="@color/colorAccent"
-                    android:text="Capture"
-                    android:textColor="@color/primaryColor" />
+                    android:backgroundTint="?attr/colorAccent"
+                    android:text="@string/capture"
+                    android:textColor="?attr/colorPrimary" />
 
         </LinearLayout>
 

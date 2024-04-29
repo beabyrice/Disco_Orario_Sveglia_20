@@ -8,11 +8,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import uni.project.disco_orario_sveglia_20.HomeActivity
 import uni.project.disco_orario_sveglia_20.ParkingDataActivity
 import uni.project.disco_orario_sveglia_20.R
 import uni.project.disco_orario_sveglia_20.databinding.FragmentCountDownBinding
+import uni.project.disco_orario_sveglia_20.repository.TimeRepository
 import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
-import java.lang.Exception
 
 class CountDownFragment : Fragment(R.layout.fragment_count_down) {
 
@@ -51,13 +52,15 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
 
         (activity as ParkingDataActivity).startService(intent)
 
-        binding.arrivalTime.text = viewModel.getArrivalTime()?.let { viewModel.timerFormat(it) }
+        binding.arrivalTime.text = viewModel.getArrivalTime()?.let { TimeRepository.timerFormat(it) }
 
         binding.progressBar.max = progressTime.toInt()
         binding.progressBar.progress = progressTime.toInt()
 
         binding.button.setOnClickListener {
             viewModel.deleteParking()
+            val homeIntent = Intent((activity as ParkingDataActivity), HomeActivity::class.java)
+            startActivity(homeIntent)
             (activity as ParkingDataActivity).finish()
         }
 
@@ -69,7 +72,7 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
             val millisUntilFinished = intent.getLongExtra("countdown", secondsLeft)
             binding.progressBar.progress = (millisUntilFinished/1000).toFloat().toInt()
 
-            textView.text = viewModel.timerFormat(millisUntilFinished)
+            textView.text = TimeRepository.timerFormat(millisUntilFinished)
         }
     }
 

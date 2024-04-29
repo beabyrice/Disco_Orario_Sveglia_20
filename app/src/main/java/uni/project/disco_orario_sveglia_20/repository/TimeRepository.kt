@@ -20,4 +20,12 @@ object TimeRepository {
 
         return ((hours * 3600 + minutes * 60)*1000).toLong()
     }
+
+    fun timerFormat(millisUntilFinished : Long) : String{
+        val hours = (millisUntilFinished/1000)/3600
+        val minutes = ((millisUntilFinished/1000)%3600)/60
+        val seconds = (millisUntilFinished/1000)%60
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    }
 }

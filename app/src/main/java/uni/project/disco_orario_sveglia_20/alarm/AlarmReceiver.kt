@@ -8,11 +8,10 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 
-
+//TODO: alarm not working in real device in background
 class AlarmReceiver : BroadcastReceiver() {
-    @RequiresApi(api = Build.VERSION_CODES.Q)  // implement onReceive() method
+
     override fun onReceive(context: Context, intent: Intent) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -27,8 +26,6 @@ class AlarmReceiver : BroadcastReceiver() {
             Toast.makeText(context, "Alarm! Wake up! Wake up!", Toast.LENGTH_LONG).show()
 
         }
-
-
 
     }
 }

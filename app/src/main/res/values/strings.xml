@@ -1,5 +1,14 @@
 <resources>
-    <string name="app_name">Disco_Orario_Sveglia_20</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Car Alarm</string>
+    <string name="insert_values_to_start">Insert values to start</string>
+    <string name="welcome">Welcome!</string>
+    <string name="auto">A</string>
+    <string name="manual">M</string>
+    <string name="parking_duration_00_00">parking duration 00:00</string>
+    <string name="confirm">Confirm</string>
+    <string name="take_a_photo">Click \"Capture\" to take a photo</string>
+    <string name="capture">Capture</string>
+    <string name="delete">Delete</string>
+    <string name="arrival">Time of arrival:</string>
+    <string name="expiring">"Expires in "</string>
 </resources>

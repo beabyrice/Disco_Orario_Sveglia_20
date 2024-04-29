@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorAccent"/>
+            <solid android:color="?attr/colorAccent"/>
             <size android:height="30dp"
                 android:width="40dp"/>
             <corners android:radius="40dp"/>
@@ -11,7 +11,7 @@
     </item>
     <item android:state_checked="false">
         <shape android:shape="rectangle">
-            <solid android:color="@color/tertiaryColor"/>
+            <solid android:color="?attr/colorTertiary"/>
             <size android:height="30dp"
                 android:width="40dp"/>
             <corners android:radius="40dp"/>

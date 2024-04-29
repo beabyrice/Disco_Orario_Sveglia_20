@@ -1,6 +1,5 @@
 package uni.project.disco_orario_sveglia_20
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -18,7 +17,6 @@ class ParkingDataActivity: AppCompatActivity(){
     private lateinit var binding: ActivityHomeBinding
     lateinit var parkingViewModel: ParkingViewModel
 
-    @SuppressLint("ResourceType", "UseRequireInsteadOfGet")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpViewModel()
