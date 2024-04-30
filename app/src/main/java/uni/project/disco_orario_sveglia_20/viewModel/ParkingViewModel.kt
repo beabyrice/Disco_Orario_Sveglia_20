@@ -1,7 +1,12 @@
 package uni.project.disco_orario_sveglia_20.viewModel
 
+import android.Manifest
+import android.app.Activity
 import android.app.Application
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
@@ -17,6 +22,8 @@ class ParkingViewModel(
     app: Application,
     private val parkingRepository: ParkingRepository
 ) : AndroidViewModel(app) {
+
+    private val CAMERA_CODE = 2
 
     private var _selectedImageUriFlow = MutableStateFlow<Uri?>(null)
     val imageUri = _selectedImageUriFlow.asStateFlow()
@@ -64,6 +71,33 @@ class ParkingViewModel(
             return parking.arrivalTime
         }
         return null
+    }
+
+    fun getCameraPermission(activity: Activity){
+        if (ActivityCompat.checkSelfPermission(
+                activity,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                activity,
+                arrayOf(Manifest.permission.CAMERA),
+                CAMERA_CODE
+            )
+            return
+        }
+
+    }
+
+    fun handlePermissionsResult(requestCode: Int, grantResults: IntArray, parkingDataActivity: Activity) {
+        if(requestCode == CAMERA_CODE){
+            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                getCameraPermission(parkingDataActivity)
+            }else{
+                Toast.makeText(parkingDataActivity, "location not permitted", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
 }

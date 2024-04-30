@@ -24,6 +24,8 @@ class ParkingDataActivity: AppCompatActivity(){
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        parkingViewModel.getCameraPermission(this)
+
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.homeNavHostFragment) as NavHostFragment
         val navController = navHostFragment.findNavController()
@@ -34,6 +36,12 @@ class ParkingDataActivity: AppCompatActivity(){
         val parkingRepository = ParkingRepository(ParkingDatabase(this))
         val viewModelProviderFactory = ViewModelFactory(application,parkingRepository)
         parkingViewModel = ViewModelProvider(this,viewModelProviderFactory)[ParkingViewModel::class.java]
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        parkingViewModel.handlePermissionsResult(requestCode, grantResults, this)
     }
 
 }

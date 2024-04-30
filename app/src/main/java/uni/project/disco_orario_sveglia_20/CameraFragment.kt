@@ -1,9 +1,12 @@
 package uni.project.disco_orario_sveglia_20
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import uni.project.disco_orario_sveglia_20.databinding.FragmentCameraBinding
@@ -21,10 +24,6 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     private lateinit var binding: FragmentCameraBinding
     private lateinit var cameraExecutor: ExecutorService
 
-    companion object{
-        const val CAMERA_CODE = 2
-    }
-
     private val contract = registerForActivityResult(ActivityResultContracts.TakePicture()){
 
         viewModel.update(viewModel.selectedImageUri.value)
@@ -40,7 +39,16 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         viewModel.update2(createImageUri())
         binding.captureButton.setOnClickListener {
 
-            contract.launch(viewModel.selectedImageUri.value)
+            if (ActivityCompat.checkSelfPermission(
+                    (activity as ParkingDataActivity),
+                    Manifest.permission.CAMERA
+                ) != PackageManager.PERMISSION_GRANTED
+            ){
+                viewModel.getCameraPermission((activity as ParkingDataActivity))
+                contract.launch(viewModel.selectedImageUri.value)
+            } else {
+                contract.launch(viewModel.selectedImageUri.value)
+            }
 
         }
 

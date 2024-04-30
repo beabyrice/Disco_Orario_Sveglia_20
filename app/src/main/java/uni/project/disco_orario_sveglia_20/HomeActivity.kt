@@ -35,7 +35,6 @@ class HomeActivity : AppCompatActivity() {
         setUpViews()
         setUpViewModel()
         homeViewModel.setFusedLocationProvider(this)
-        homeViewModel.getCameraPermission(this)
         
         confirm.setOnClickListener {
             if(
@@ -107,7 +106,5 @@ class HomeActivity : AppCompatActivity() {
         val viewModelProviderFactory = ViewModelFactory(application,parkingRepository)
         homeViewModel = ViewModelProvider(this,viewModelProviderFactory)[HomeViewModel::class.java]
     }
-
-
 
 }

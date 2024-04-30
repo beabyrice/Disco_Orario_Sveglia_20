@@ -14,7 +14,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import uni.project.disco_orario_sveglia_20.CameraFragment
 import uni.project.disco_orario_sveglia_20.model.Parking
 import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
 import uni.project.disco_orario_sveglia_20.repository.TimeRepository
@@ -38,6 +37,7 @@ class HomeViewModel(
         getLastLocation(activity)
     }
 
+    //TODO: apk doesnt work!
     private fun getLastLocation(activity: Activity) {
         if (ActivityCompat.checkSelfPermission(
                 activity,
@@ -57,21 +57,6 @@ class HomeViewModel(
             }?: run{
                 Log.d(TAG, "entrato")
         }
-        }
-    }
-
-    fun getCameraPermission(activity: Activity){
-        if (ActivityCompat.checkSelfPermission(
-                activity,
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                activity,
-                arrayOf(Manifest.permission.CAMERA),
-                CameraFragment.CAMERA_CODE
-            )
-            getCameraPermission(activity)
         }
     }
 
