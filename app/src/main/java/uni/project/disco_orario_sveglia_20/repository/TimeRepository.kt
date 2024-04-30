@@ -9,6 +9,7 @@ object TimeRepository {
         return regexPattern.matches(timeString)
     }
 
+    //TODO:remove if not used
     fun getLongCurrentTime() : Long{
         return (LocalTime.now().toSecondOfDay() * 1000).toLong()
     }

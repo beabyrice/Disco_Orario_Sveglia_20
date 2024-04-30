@@ -26,28 +26,29 @@ class ParkingViewModel(
     private val CAMERA_CODE = 2
 
     private var _selectedImageUriFlow = MutableStateFlow<Uri?>(null)
-    val imageUri = _selectedImageUriFlow.asStateFlow()
+    val selectedImageUri = _selectedImageUriFlow.asStateFlow()
     private var parkingFlow = MutableStateFlow<Parking?>(null)
     private val parking = parkingFlow.asStateFlow()
     private var _imageUriFlow = MutableStateFlow<Uri?>(null)
-    val selectedImageUri = _imageUriFlow.asStateFlow()
+    val imageUri = _imageUriFlow.asStateFlow()
 
-    fun update(uri: Uri?){
+    fun updateSelected(uri: Uri?) {
         viewModelScope.launch(Dispatchers.IO) { _selectedImageUriFlow.update { uri } }
 
     }
 
-    fun update2(uri:Uri?){
+    fun updateNew(uri: Uri?) {
         viewModelScope.launch(Dispatchers.IO) { _imageUriFlow.update { uri } }
     }
 
-    fun getParking(){
-        viewModelScope.launch (Dispatchers.IO){
+    fun getParking() {
+        viewModelScope.launch(Dispatchers.IO) {
             parkingFlow.update { parkingRepository.getParking() }
         }
     }
-    fun deleteParking(){
-        viewModelScope.launch (Dispatchers.IO){
+
+    fun deleteParking() {
+        viewModelScope.launch(Dispatchers.IO) {
             parking.value?.let { parkingRepository.deleteParking(it) }
         }
     }
@@ -59,21 +60,21 @@ class ParkingViewModel(
         return null
     }
 
-    fun getParkingDuration() : Long?{
+    fun getParkingDuration(): Long? {
         parking.value?.let { parking ->
             return parking.parkingDuration
         }
         return null
     }
 
-    fun getArrivalTime() : Long?{
+    fun getArrivalTime(): Long? {
         parking.value?.let { parking ->
             return parking.arrivalTime
         }
         return null
     }
 
-    fun getCameraPermission(activity: Activity){
+    fun getCameraPermission(activity: Activity) {
         if (ActivityCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.CAMERA
@@ -89,12 +90,17 @@ class ParkingViewModel(
 
     }
 
-    fun handlePermissionsResult(requestCode: Int, grantResults: IntArray, parkingDataActivity: Activity) {
-        if(requestCode == CAMERA_CODE){
-            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+    fun handlePermissionsResult(
+        requestCode: Int,
+        grantResults: IntArray,
+        parkingDataActivity: Activity
+    ) {
+        if (requestCode == CAMERA_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getCameraPermission(parkingDataActivity)
-            }else{
-                Toast.makeText(parkingDataActivity, "location not permitted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(parkingDataActivity, "location not permitted", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 

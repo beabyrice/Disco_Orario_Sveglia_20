@@ -26,6 +26,5 @@ class AlarmReceiver : BroadcastReceiver() {
             Toast.makeText(context, "Alarm! Wake up! Wake up!", Toast.LENGTH_LONG).show()
 
         }
-
     }
 }

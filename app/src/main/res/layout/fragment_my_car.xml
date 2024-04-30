@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/myCar"
-    tools:context=".map.MyCarFragment">
+    tools:context=".fragments.MyCarFragment">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/mapView"

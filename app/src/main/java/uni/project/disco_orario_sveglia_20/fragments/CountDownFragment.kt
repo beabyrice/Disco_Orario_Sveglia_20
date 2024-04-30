@@ -1,4 +1,4 @@
-package uni.project.disco_orario_sveglia_20.alarm
+package uni.project.disco_orario_sveglia_20.fragments
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -8,9 +8,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import uni.project.disco_orario_sveglia_20.HomeActivity
-import uni.project.disco_orario_sveglia_20.ParkingDataActivity
 import uni.project.disco_orario_sveglia_20.R
+import uni.project.disco_orario_sveglia_20.activities.MainActivity
+import uni.project.disco_orario_sveglia_20.activities.ParkingDataActivity
+import uni.project.disco_orario_sveglia_20.alarm.CountDownTimerService
 import uni.project.disco_orario_sveglia_20.databinding.FragmentCountDownBinding
 import uni.project.disco_orario_sveglia_20.repository.TimeRepository
 import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
@@ -48,7 +49,7 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
 
         }
 
-        val intent = Intent((activity as ParkingDataActivity),CountDownTimerService::class.java)
+        val intent = Intent((activity as ParkingDataActivity), CountDownTimerService::class.java)
 
         (activity as ParkingDataActivity).startService(intent)
 
@@ -59,7 +60,7 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
 
         binding.button.setOnClickListener {
             viewModel.deleteParking()
-            val homeIntent = Intent((activity as ParkingDataActivity), HomeActivity::class.java)
+            val homeIntent = Intent((activity as ParkingDataActivity), MainActivity::class.java)
             startActivity(homeIntent)
             (activity as ParkingDataActivity).finish()
         }
@@ -78,7 +79,9 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
 
     override fun onResume() {
         super.onResume()
-        (activity as ParkingDataActivity).registerReceiver(broadcastReceiver, IntentFilter(CountDownTimerService.COUNTDOWN_BR))
+        (activity as ParkingDataActivity).registerReceiver(broadcastReceiver, IntentFilter(
+            CountDownTimerService.COUNTDOWN_BR
+        ))
     }
 
     override fun onPause() {
@@ -96,7 +99,8 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
     }
 
     override fun onDestroy() {
-        (activity as ParkingDataActivity).stopService(Intent((activity as ParkingDataActivity),CountDownTimerService::class.java))
+        (activity as ParkingDataActivity).stopService(Intent((activity as ParkingDataActivity),
+            CountDownTimerService::class.java))
         super.onDestroy()
     }
 

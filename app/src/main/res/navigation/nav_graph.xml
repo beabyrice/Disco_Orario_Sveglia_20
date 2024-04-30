@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/countDown"
-        android:name="uni.project.disco_orario_sveglia_20.alarm.CountDownFragment"
+        android:name="uni.project.disco_orario_sveglia_20.fragments.CountDownFragment"
         android:label="fragment_count_down"
         tools:layout="@layout/fragment_count_down" >
         <action
@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/myCar"
-        android:name="uni.project.disco_orario_sveglia_20.map.MyCarFragment"
+        android:name="uni.project.disco_orario_sveglia_20.fragments.MyCarFragment"
         android:label="fragment_my_car"
         tools:layout="@layout/fragment_my_car" >
         <action
@@ -31,7 +31,7 @@
     </fragment>
     <fragment
         android:id="@+id/camera"
-        android:name="uni.project.disco_orario_sveglia_20.CameraFragment"
+        android:name="uni.project.disco_orario_sveglia_20.fragments.CameraFragment"
         android:label="fragment_camera"
         tools:layout="@layout/fragment_camera" >
         <action

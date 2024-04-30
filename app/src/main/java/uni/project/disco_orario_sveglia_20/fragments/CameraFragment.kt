@@ -1,4 +1,4 @@
-package uni.project.disco_orario_sveglia_20
+package uni.project.disco_orario_sveglia_20.fragments
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -9,6 +9,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import uni.project.disco_orario_sveglia_20.R
+import uni.project.disco_orario_sveglia_20.activities.ParkingDataActivity
 import uni.project.disco_orario_sveglia_20.databinding.FragmentCameraBinding
 import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
 import java.io.File
@@ -16,7 +20,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-//TODO: not working correctly
+//TODO: try on real device
 
 class CameraFragment : Fragment(R.layout.fragment_camera) {
 
@@ -24,10 +28,13 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     private lateinit var binding: FragmentCameraBinding
     private lateinit var cameraExecutor: ExecutorService
 
-    private val contract = registerForActivityResult(ActivityResultContracts.TakePicture()){
+    private val contract = registerForActivityResult(ActivityResultContracts.TakePicture()) {
 
-        viewModel.update(viewModel.selectedImageUri.value)
-
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.imageUri.collect {
+                viewModel.updateSelected(it)
+            }
+        }
     }
 
 
@@ -36,18 +43,21 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         binding = FragmentCameraBinding.bind(view)
         viewModel = (activity as ParkingDataActivity).parkingViewModel
 
-        viewModel.update2(createImageUri())
+        viewModel.updateNew(createImageUri())
         binding.captureButton.setOnClickListener {
-
-            if (ActivityCompat.checkSelfPermission(
-                    (activity as ParkingDataActivity),
-                    Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED
-            ){
-                viewModel.getCameraPermission((activity as ParkingDataActivity))
-                contract.launch(viewModel.selectedImageUri.value)
-            } else {
-                contract.launch(viewModel.selectedImageUri.value)
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.selectedImageUri.collect {
+                    if (ActivityCompat.checkSelfPermission(
+                            (activity as ParkingDataActivity),
+                            Manifest.permission.CAMERA
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        viewModel.getCameraPermission((activity as ParkingDataActivity))
+                        contract.launch(it)
+                    } else {
+                        contract.launch(it)
+                    }
+                }
             }
 
         }
@@ -69,11 +79,13 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     }
 
 
-    private fun createImageUri() : Uri {
+    private fun createImageUri(): Uri {
         val image = File((activity as ParkingDataActivity).filesDir, "camera_photos.png")
-        return FileProvider.getUriForFile((activity as ParkingDataActivity),
+        return FileProvider.getUriForFile(
+            (activity as ParkingDataActivity),
             "uni.project.disco_orario_sveglia_20.FileProvider",
-            image)
+            image
+        )
     }
 
 

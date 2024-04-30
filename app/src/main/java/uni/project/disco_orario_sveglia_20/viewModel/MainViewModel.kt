@@ -18,7 +18,7 @@ import uni.project.disco_orario_sveglia_20.model.Parking
 import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
 import uni.project.disco_orario_sveglia_20.repository.TimeRepository
 
-class HomeViewModel(
+class MainViewModel(
     app: Application,
     private val parkingRepository: ParkingRepository
 ) : AndroidViewModel(app){
@@ -69,20 +69,12 @@ class HomeViewModel(
         )
     }
 
-    private fun setParkingDuration(duration: String){
+    fun setParkingDuration(duration: String){
         parkingDuration = TimeRepository.getLongSecondsFromString(duration)
     }
 
-    fun setTimeFromUser(time: String){
+    fun setTime(time: String){
         currentTime = TimeRepository.getLongSecondsFromString(time)
-    }
-
-    fun setCurrentTime(time: String){
-        currentTime = TimeRepository.getLongSecondsFromString(time)
-    }
-
-    fun completeSetting(duration : String){
-        setParkingDuration(duration)
     }
 
     fun upsertParking(){

@@ -1,4 +1,4 @@
-package uni.project.disco_orario_sveglia_20.map
+package uni.project.disco_orario_sveglia_20.fragments
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -12,8 +12,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import uni.project.disco_orario_sveglia_20.ParkingDataActivity
 import uni.project.disco_orario_sveglia_20.R
+import uni.project.disco_orario_sveglia_20.activities.ParkingDataActivity
 import uni.project.disco_orario_sveglia_20.databinding.FragmentMyCarBinding
 import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
 
@@ -40,11 +40,9 @@ class MyCarFragment : Fragment(R.layout.fragment_my_car), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.uiSettings.isMapToolbarEnabled = true
         setUpMap()
-
     }
 
     private fun setUpMap() {
