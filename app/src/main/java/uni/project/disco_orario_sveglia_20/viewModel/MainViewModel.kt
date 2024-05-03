@@ -4,42 +4,60 @@ import android.Manifest
 import android.app.Activity
 import android.app.Application
 import android.content.pm.PackageManager
+import android.os.Looper
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import uni.project.disco_orario_sveglia_20.model.Parking
 import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
 import uni.project.disco_orario_sveglia_20.repository.TimeRepository
+import java.util.concurrent.TimeUnit
 
 class MainViewModel(
     app: Application,
     private val parkingRepository: ParkingRepository
 ) : AndroidViewModel(app){
-    companion object{
-        const val TAG = "HomeViewModel"
-    }
 
     private val FINE_PERMISSION_CODE = 1
     private lateinit var currentLocation : LatLng
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    private lateinit var locationRequest: LocationRequest
+
+    private lateinit var locationCallback: LocationCallback
+
     private var currentTime = 0L
     private var parkingDuration = 0L
 
     fun setFusedLocationProvider(activity: Activity){
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity)
+        locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, TimeUnit.SECONDS.toMillis(30)).setWaitForAccurateLocation(false).build()
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(result: LocationResult) {
+                super.onLocationResult(result)
+                result.lastLocation?.let {
+                    currentLocation = LatLng(it.latitude, it.longitude)
+                }
+            }
+        }
         getLastLocation(activity)
     }
 
     //TODO: apk doesnt work on realease -> put another api key
-    //TODO:change the whole location thing
+    //TODO:try other devices
     private fun getLastLocation(activity: Activity) {
+
         if (ActivityCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -51,14 +69,7 @@ class MainViewModel(
             ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), FINE_PERMISSION_CODE)
             return
         }
-        val task = fusedLocationProviderClient.getCurrentLocation(CurrentLocationRequest.Builder().build(),null)
-        task.addOnSuccessListener {location ->
-            location?.let {
-                currentLocation = LatLng(location.latitude,location.longitude)
-            }?: run{
-                Toast.makeText(activity,"Posizione non rilevata", Toast.LENGTH_LONG)
-        }
-        }
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
 
     private fun getParking(): Parking{
@@ -78,7 +89,6 @@ class MainViewModel(
         currentTime = TimeRepository.getLongSecondsFromString(time)
     }
 
-    //TODO: take out IO ??
     fun upsertParking(){
         viewModelScope.launch(Dispatchers.IO) {
             val parking = getParking()
