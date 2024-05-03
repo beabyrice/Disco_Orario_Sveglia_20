@@ -64,8 +64,6 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
             startActivity(homeIntent)
             (activity as ParkingDataActivity).finish()
         }
-
-
     }
 
     private fun updateUI(intent: Intent, secondsLeft: Long, textView: TextView) {

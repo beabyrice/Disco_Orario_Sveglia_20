@@ -19,6 +19,7 @@ import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
 
 class MyCarFragment : Fragment(R.layout.fragment_my_car), OnMapReadyCallback {
 
+    //TODO: 2 keys needed one for debug, the other for release if u want to create apk
     private lateinit var viewModel: ParkingViewModel
     private lateinit var binding: FragmentMyCarBinding
     private lateinit var mMap: GoogleMap

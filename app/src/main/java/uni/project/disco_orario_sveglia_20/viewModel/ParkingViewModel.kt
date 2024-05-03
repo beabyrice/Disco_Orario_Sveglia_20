@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
@@ -15,8 +16,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import uni.project.disco_orario_sveglia_20.activities.ParkingDataActivity
 import uni.project.disco_orario_sveglia_20.model.Parking
 import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
+import java.io.File
 
 class ParkingViewModel(
     app: Application,
@@ -25,21 +28,8 @@ class ParkingViewModel(
 
     private val CAMERA_CODE = 2
 
-    private var _selectedImageUriFlow = MutableStateFlow<Uri?>(null)
-    val selectedImageUri = _selectedImageUriFlow.asStateFlow()
     private var parkingFlow = MutableStateFlow<Parking?>(null)
     private val parking = parkingFlow.asStateFlow()
-    private var _imageUriFlow = MutableStateFlow<Uri?>(null)
-    val imageUri = _imageUriFlow.asStateFlow()
-
-    fun updateSelected(uri: Uri?) {
-        viewModelScope.launch(Dispatchers.IO) { _selectedImageUriFlow.update { uri } }
-
-    }
-
-    fun updateNew(uri: Uri?) {
-        viewModelScope.launch(Dispatchers.IO) { _imageUriFlow.update { uri } }
-    }
 
     fun getParking() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -88,6 +78,32 @@ class ParkingViewModel(
             return
         }
 
+    }
+
+     fun createImageUri(activity : Activity): Uri {
+        activity.filesDir.listFiles()
+        val image = File((activity as ParkingDataActivity).filesDir, "camera_photos.png")
+        return FileProvider.getUriForFile(
+            activity,
+            "uni.project.disco_orario_sveglia_20.FileProvider",
+            image
+        )
+    }
+
+    fun deleteImageFile(activity : Activity) {
+        val imageFile = File(activity.filesDir, "camera_photos.png")
+        if (imageFile.exists()) {
+            imageFile.delete()
+        }
+    }
+
+    fun getImageFile(activity: Activity) : File? {
+        val imageFile = File(activity.filesDir, "camera_photos.png")
+        return if (imageFile.exists()) {
+            imageFile
+        } else {
+            null
+        }
     }
 
     fun handlePermissionsResult(

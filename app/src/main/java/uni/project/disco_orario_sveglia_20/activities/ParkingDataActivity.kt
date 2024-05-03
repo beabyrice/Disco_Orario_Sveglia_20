@@ -41,6 +41,11 @@ class ParkingDataActivity : AppCompatActivity() {
             ViewModelProvider(this, viewModelProviderFactory)[ParkingViewModel::class.java]
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        parkingViewModel.deleteImageFile(this)
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

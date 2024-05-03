@@ -9,7 +9,7 @@ import android.os.IBinder
 class CountDownTimerService : Service() {
 
     companion object {
-        const val COUNTDOWN_BR = "uni.project.disco_orario_sveglia_20.alarm"
+        val COUNTDOWN_BR = "uni.project.disco_orario_sveglia_20.alarm"
     }
 
     val intent = Intent(COUNTDOWN_BR)

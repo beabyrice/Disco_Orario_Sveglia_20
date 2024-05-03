@@ -4,11 +4,11 @@ import android.Manifest
 import android.app.Activity
 import android.app.Application
 import android.content.pm.PackageManager
-import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
@@ -37,7 +37,8 @@ class MainViewModel(
         getLastLocation(activity)
     }
 
-    //TODO: apk doesnt work!
+    //TODO: apk doesnt work on realease -> put another api key
+    //TODO:change the whole location thing
     private fun getLastLocation(activity: Activity) {
         if (ActivityCompat.checkSelfPermission(
                 activity,
@@ -50,12 +51,12 @@ class MainViewModel(
             ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), FINE_PERMISSION_CODE)
             return
         }
-        val task = fusedLocationProviderClient.lastLocation
+        val task = fusedLocationProviderClient.getCurrentLocation(CurrentLocationRequest.Builder().build(),null)
         task.addOnSuccessListener {location ->
             location?.let {
                 currentLocation = LatLng(location.latitude,location.longitude)
             }?: run{
-                Log.d(TAG, "entrato")
+                Toast.makeText(activity,"Posizione non rilevata", Toast.LENGTH_LONG)
         }
         }
     }
@@ -77,6 +78,7 @@ class MainViewModel(
         currentTime = TimeRepository.getLongSecondsFromString(time)
     }
 
+    //TODO: take out IO ??
     fun upsertParking(){
         viewModelScope.launch(Dispatchers.IO) {
             val parking = getParking()
