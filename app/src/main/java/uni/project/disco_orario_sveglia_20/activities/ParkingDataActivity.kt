@@ -25,7 +25,9 @@ class ParkingDataActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        parkingViewModel.getCameraPermission(this)
+        if(!parkingViewModel.isCameraPermissionOk(this)) {
+            parkingViewModel.getCameraPermission(this)
+        }
 
 
         val navHostFragment =
@@ -52,7 +54,6 @@ class ParkingDataActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
         parkingViewModel.handlePermissionsResult(requestCode, grantResults, this)
     }
 

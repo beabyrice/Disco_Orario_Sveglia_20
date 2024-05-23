@@ -1,11 +1,9 @@
 package uni.project.disco_orario_sveglia_20.fragments
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import coil.load
 import uni.project.disco_orario_sveglia_20.R
@@ -15,7 +13,7 @@ import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-
+//TODO:toast w strings
 class CameraFragment : Fragment(R.layout.fragment_camera) {
 
     private lateinit var viewModel: ParkingViewModel
@@ -30,19 +28,15 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         viewModel = (activity as ParkingDataActivity).parkingViewModel
 
         binding.captureButton.setOnClickListener {
-            if (ActivityCompat.checkSelfPermission(
-                    (activity as ParkingDataActivity),
-                    Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                viewModel.getCameraPermission((activity as ParkingDataActivity))
+            if (viewModel.isCameraPermissionOk((activity as ParkingDataActivity)))
+            {
                 viewModel.deleteImageFile((activity as ParkingDataActivity))
                 contract.launch(viewModel.createImageUri((activity as ParkingDataActivity)))
             } else {
                 viewModel.deleteImageFile((activity as ParkingDataActivity))
-                contract.launch(viewModel.createImageUri((activity as ParkingDataActivity)))
+                Toast.makeText((activity as ParkingDataActivity), "camera not permitted, close the app and retry", Toast.LENGTH_SHORT)
+                    .show()
             }
-
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()

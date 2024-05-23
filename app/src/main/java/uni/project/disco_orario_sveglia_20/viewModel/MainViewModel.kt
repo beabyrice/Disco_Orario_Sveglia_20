@@ -23,13 +23,14 @@ import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
 import uni.project.disco_orario_sveglia_20.repository.TimeRepository
 import java.util.concurrent.TimeUnit
 
+//TODO: make toasts with string ids
 class MainViewModel(
     app: Application,
     private val parkingRepository: ParkingRepository
 ) : AndroidViewModel(app){
 
     private val FINE_PERMISSION_CODE = 1
-    private lateinit var currentLocation : LatLng
+    lateinit var currentLocation : LatLng
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private lateinit var locationRequest: LocationRequest
@@ -51,25 +52,40 @@ class MainViewModel(
                 }
             }
         }
-        getLastLocation(activity)
     }
 
+    fun isLocationPermitted(activity: Activity): Boolean {
+        return !(ActivityCompat.checkSelfPermission(
+            activity,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            activity,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED)
+    }
+
+    fun getLocationPermission(activity: Activity){
+        ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), FINE_PERMISSION_CODE)
+        return
+
+    }
     //TODO: apk doesnt work on realease -> put another api key
     //TODO:try other devices
-    private fun getLastLocation(activity: Activity) {
-
-        if (ActivityCompat.checkSelfPermission(
+    fun getLastLocation(activity: Activity) {
+        if(ActivityCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), FINE_PERMISSION_CODE)
-            return
+            ) != PackageManager.PERMISSION_GRANTED){
+            getLocationPermission(activity)
         }
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+    }
+
+    fun isLocationInitialized(): Boolean {
+        return this@MainViewModel::currentLocation.isInitialized
     }
 
     private fun getParking(): Parking{
@@ -101,7 +117,7 @@ class MainViewModel(
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 getLastLocation(activity)
             }else{
-                Toast.makeText(activity, "location not permitted",Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "location not permitted, close the app and change settings",Toast.LENGTH_SHORT).show()
             }
         }
     }

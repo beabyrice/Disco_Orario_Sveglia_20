@@ -75,16 +75,11 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         (activity as ParkingDataActivity).registerReceiver(broadcastReceiver, IntentFilter(
-            CountDownTimerService.COUNTDOWN_BR
-        ))
-    }
-
-    override fun onPause() {
-        super.onPause()
-        (activity as ParkingDataActivity).unregisterReceiver(broadcastReceiver)
+            CountDownTimerService.COUNTDOWN_BR)
+        )
     }
 
     override fun onStop() {

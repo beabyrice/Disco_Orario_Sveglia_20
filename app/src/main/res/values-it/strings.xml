@@ -12,4 +12,5 @@
     <string name="delete">Elimina</string>
     <string name="arrival">Sei arrivato alle:</string>
     <string name="expiring">"Scade tra "</string>
+    <string name="countdown_finished_text">Il disco orario è scaduto, vai alla macchina!</string>
 </resources>

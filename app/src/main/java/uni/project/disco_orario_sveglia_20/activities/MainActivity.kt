@@ -20,6 +20,7 @@ import uni.project.disco_orario_sveglia_20.viewModel.ViewModelFactory
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
+//TODO: toast with string ids
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainViewModel: MainViewModel
@@ -35,25 +36,36 @@ class MainActivity : AppCompatActivity() {
         setUpViews()
         setUpViewModel()
         mainViewModel.setFusedLocationProvider(this)
-
+        if (mainViewModel.isLocationPermitted(this)){
+            mainViewModel.getLastLocation(this)
+        } else {
+            mainViewModel.getLocationPermission(this)
+        }
         confirm.setOnClickListener {
-            if (
-                (TimeRepository.isValidTime(manualEditText.hint.toString()) || TimeRepository.isValidTime(manualEditText.text.toString()))
-                && TimeRepository.isValidTime(durationEditText.text.toString())
-            ) {
-                if (switchCompat.isChecked && TimeRepository.isValidTime(manualEditText.text.toString())) {
-                    mainViewModel.setTime(manualEditText.text.toString())
-                } else {
-                    mainViewModel.setTime(manualEditText.hint.toString())
-                }
-                mainViewModel.setParkingDuration(durationEditText.text.toString())
-                mainViewModel.upsertParking()
+            if (mainViewModel.isLocationInitialized()) {
+                if (
+                    (TimeRepository.isValidTime(manualEditText.hint.toString()) || TimeRepository.isValidTime(
+                        manualEditText.text.toString()
+                    ))
+                    && TimeRepository.isValidTime(durationEditText.text.toString())
+                ) {
+                    if (switchCompat.isChecked && TimeRepository.isValidTime(manualEditText.text.toString())) {
+                        mainViewModel.setTime(manualEditText.text.toString())
+                    } else {
+                        mainViewModel.setTime(manualEditText.hint.toString())
+                    }
+                    mainViewModel.setParkingDuration(durationEditText.text.toString())
+                    mainViewModel.upsertParking()
 
-                val intent = Intent(this, ParkingDataActivity::class.java)
-                startActivity(intent)
-                finish()
+                    val intent = Intent(this, ParkingDataActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this, "Wrong format, use 00:00", Toast.LENGTH_LONG).show()
+                }
             } else {
-                Toast.makeText(this, "Wrong format, use 00:00", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Location not permitted or not updated yet, retry please", Toast.LENGTH_LONG).show()
+                mainViewModel.getLastLocation(this)
             }
         }
 
@@ -65,7 +77,6 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
         mainViewModel.handlePermissionsResult(requestCode, grantResults, this)
     }
 
@@ -85,7 +96,6 @@ class MainActivity : AppCompatActivity() {
                 else backToAutomaticInsertion(activity)
             }
         }
-
     }
 
     private fun backToAutomaticInsertion(activity: Activity) {

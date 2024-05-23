@@ -80,6 +80,13 @@ class ParkingViewModel(
 
     }
 
+    fun isCameraPermissionOk(activity: Activity): Boolean {
+        return ActivityCompat.checkSelfPermission(
+            activity,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
      fun createImageUri(activity : Activity): Uri {
         activity.filesDir.listFiles()
         val image = File((activity as ParkingDataActivity).filesDir, "camera_photos.png")
@@ -115,7 +122,7 @@ class ParkingViewModel(
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getCameraPermission(parkingDataActivity)
             } else {
-                Toast.makeText(parkingDataActivity, "location not permitted", Toast.LENGTH_SHORT)
+                Toast.makeText(parkingDataActivity, "camera not permitted", Toast.LENGTH_SHORT)
                     .show()
             }
         }

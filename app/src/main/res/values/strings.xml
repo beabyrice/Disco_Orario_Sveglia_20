@@ -11,4 +11,5 @@
     <string name="delete">Delete</string>
     <string name="arrival">Time of arrival:</string>
     <string name="expiring">"Expires in "</string>
+    <string name="countdown_finished_text">Parking timer has ended, go to your car!</string>
 </resources>
