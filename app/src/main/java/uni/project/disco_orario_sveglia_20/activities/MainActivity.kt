@@ -20,7 +20,6 @@ import uni.project.disco_orario_sveglia_20.viewModel.ViewModelFactory
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-//TODO: toast with string ids
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainViewModel: MainViewModel
@@ -61,10 +60,10 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(this, "Wrong format, use 00:00", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, R.string.wrong_format, Toast.LENGTH_LONG).show()
                 }
             } else {
-                Toast.makeText(this, "Location not permitted or not updated yet, retry please", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.camera_permission, Toast.LENGTH_LONG).show()
                 mainViewModel.getLastLocation(this)
             }
         }

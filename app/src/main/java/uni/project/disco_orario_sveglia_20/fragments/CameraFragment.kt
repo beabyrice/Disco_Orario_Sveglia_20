@@ -13,7 +13,6 @@ import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-//TODO:toast w strings
 class CameraFragment : Fragment(R.layout.fragment_camera) {
 
     private lateinit var viewModel: ParkingViewModel
@@ -34,7 +33,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
                 contract.launch(viewModel.createImageUri((activity as ParkingDataActivity)))
             } else {
                 viewModel.deleteImageFile((activity as ParkingDataActivity))
-                Toast.makeText((activity as ParkingDataActivity), "camera not permitted, close the app and retry", Toast.LENGTH_SHORT)
+                Toast.makeText((activity as ParkingDataActivity), R.string.camera_permission, Toast.LENGTH_SHORT)
                     .show()
             }
         }

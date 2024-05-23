@@ -18,12 +18,12 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import uni.project.disco_orario_sveglia_20.R
 import uni.project.disco_orario_sveglia_20.model.Parking
 import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
 import uni.project.disco_orario_sveglia_20.repository.TimeRepository
 import java.util.concurrent.TimeUnit
 
-//TODO: make toasts with string ids
 class MainViewModel(
     app: Application,
     private val parkingRepository: ParkingRepository
@@ -117,7 +117,7 @@ class MainViewModel(
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 getLastLocation(activity)
             }else{
-                Toast.makeText(activity, "location not permitted, close the app and change settings",Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, R.string.location_permission,Toast.LENGTH_SHORT).show()
             }
         }
     }

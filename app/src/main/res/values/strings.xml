@@ -12,4 +12,7 @@
     <string name="arrival">Time of arrival:</string>
     <string name="expiring">"Expires in "</string>
     <string name="countdown_finished_text">Parking timer has ended, go to your car!</string>
+    <string name="camera_permission">camera not permitted, close the app and retry</string>
+    <string name="wrong_format">wrong format, use 00:00</string>
+    <string name="location_permission">location not permitted, close the app and change settings</string>
 </resources>

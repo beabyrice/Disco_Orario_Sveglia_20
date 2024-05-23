@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import uni.project.disco_orario_sveglia_20.R
 import uni.project.disco_orario_sveglia_20.activities.ParkingDataActivity
 import uni.project.disco_orario_sveglia_20.model.Parking
 import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
@@ -122,7 +123,7 @@ class ParkingViewModel(
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getCameraPermission(parkingDataActivity)
             } else {
-                Toast.makeText(parkingDataActivity, "camera not permitted", Toast.LENGTH_SHORT)
+                Toast.makeText(parkingDataActivity, R.string.camera_permission, Toast.LENGTH_SHORT)
                     .show()
             }
         }
