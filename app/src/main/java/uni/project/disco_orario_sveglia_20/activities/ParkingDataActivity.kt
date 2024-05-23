@@ -1,5 +1,6 @@
 package uni.project.disco_orario_sveglia_20.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -7,6 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import uni.project.disco_orario_sveglia_20.R
+import uni.project.disco_orario_sveglia_20.alarm.CountDownTimerService
 import uni.project.disco_orario_sveglia_20.databinding.ActivityHomeBinding
 import uni.project.disco_orario_sveglia_20.db.ParkingDatabase
 import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
@@ -34,6 +36,9 @@ class ParkingDataActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.homeNavHostFragment) as NavHostFragment
         val navController = navHostFragment.findNavController()
         binding.bottomNavigationView.setupWithNavController(navController)
+
+        val serviceIntent = Intent(this, CountDownTimerService::class.java)
+        startForegroundService(serviceIntent)
     }
 
     private fun setUpViewModel() {
