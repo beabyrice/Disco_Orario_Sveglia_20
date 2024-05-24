@@ -20,7 +20,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:text="@string/arrival"
-            android:textColor="?attr/colorAccent"
+            android:textColor="?attr/colorPrimary"
             android:textSize="32sp"
             android:textStyle="bold" />
 
@@ -31,7 +31,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:text=""
-            android:textColor="?attr/colorAccent"
+            android:textColor="?attr/colorPrimary"
             android:textSize="32sp"
             android:textStyle="bold" />
 
@@ -43,7 +43,7 @@
             android:layout_margin="10dp"
             android:text="@string/expiring"
             android:textAlignment="center"
-            android:textColor="?attr/colorAccent"
+            android:textColor="?attr/colorPrimary"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -60,9 +60,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:textColor="?attr/colorAccent"
-            android:textColorHint="?attr/colorAccent"
-            android:textColorLink="?attr/colorAccent"
+            android:textColor="?attr/colorPrimary"
+            android:textColorHint="?attr/colorPrimary"
+            android:textColorLink="?attr/colorPrimary"
             android:textSize="34sp"
             android:textStyle="bold" />
 
@@ -84,7 +84,8 @@
             android:layout_margin="20dp"
             android:backgroundTint="?attr/colorAccent"
             android:text="@string/delete"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="?attr/background"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 

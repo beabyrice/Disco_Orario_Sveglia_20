@@ -1,6 +1,7 @@
 package uni.project.disco_orario_sveglia_20.activities
 
 import android.app.Activity
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -20,6 +21,7 @@ import uni.project.disco_orario_sveglia_20.viewModel.MainViewModel
 import uni.project.disco_orario_sveglia_20.viewModel.ViewModelFactory
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         setUpViews()
         setUpViewModel()
+
         mainViewModel.setFusedLocationProvider(this)
         if (mainViewModel.isLocationPermitted(this)){
             mainViewModel.getLastLocation(this)
@@ -88,7 +91,9 @@ class MainActivity : AppCompatActivity() {
         manualEditText = findViewById(R.id.manualEditText)
         manualEditText.hint =
             LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")).toString()
+        setTimePicker(manualEditText)
         durationEditText = findViewById(R.id.durationEditText)
+        setTimePicker(durationEditText)
         confirm = findViewById(R.id.manualTimeBt)
         switchCompat = findViewById(R.id.switch1)
         switchCompat.apply {
@@ -112,7 +117,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun enableManualInsertion(activity: Activity) {
         val typedValue = TypedValue()
-        this.theme.resolveAttribute(androidx.appcompat.R.attr.colorAccent, typedValue, true)
+        this.theme.resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true)
         val color = typedValue.resourceId
         manualEditText.apply {
             isFocusable = true
@@ -126,6 +131,29 @@ class MainActivity : AppCompatActivity() {
         val parkingRepository = ParkingRepository(ParkingDatabase(this))
         val viewModelProviderFactory = ViewModelFactory(application, parkingRepository)
         mainViewModel = ViewModelProvider(this, viewModelProviderFactory)[MainViewModel::class.java]
+    }
+
+    private fun setTimePicker(text: EditText){
+        text.setOnFocusChangeListener { _, hasFocus ->
+            if(hasFocus) {
+                val c = Calendar.getInstance()
+                val hour = c.get(Calendar.HOUR_OF_DAY)
+                val minute = c.get(Calendar.MINUTE)
+                val timePickerDialog = TimePickerDialog(
+                    this,
+                    { _, hourOfDay, minuteOfHour ->
+                        text.setText(String.format("%02d:%02d", hourOfDay, minuteOfHour))
+                    },
+                    hour,
+                    minute,
+                    true
+                )
+                timePickerDialog.setOnDismissListener {
+                    text.clearFocus() // Clear focus to prevent the dialog from reopening
+                }
+                timePickerDialog.show()
+            }
+        }
     }
 
     override fun onDestroy() {

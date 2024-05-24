@@ -2,15 +2,15 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#9D6A6A</color>
-    <color name="primaryColor">#F9EFDB</color>
-    <color name="secondaryColor">#EBD9B4</color>
+    <color name="background">#F9EFDB</color>
+    <color name="primaryColor">#638889</color>
+    <color name="bottomNav">#EBD9B4</color>
     <color name="tertiaryColor">#9DBC98</color>
-    <color name="colorAccent">#638889</color>
 
-    <color name="primaryColorDark">#2C3639</color>
-    <color name="secondaryColorDark">#3F4E4F</color>
+    <color name="backgroundDark">#2C3639</color>
+    <color name="primaryColorDark">#DCD7C9</color>
+    <color name="bottomNavDark">#3F4E4F</color>
     <color name="tertiaryColorDark">#A27B5C</color>
-    <color name="colorAccentDark">#DCD7C9</color>
 
     <color name="disabled">#6F6E6C</color>
 

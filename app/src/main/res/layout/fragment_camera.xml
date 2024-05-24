@@ -24,7 +24,8 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="80dp"
             android:text="@string/take_a_photo"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            />
 
         <Button
             android:id="@+id/captureButton"
@@ -34,6 +35,7 @@
             android:layout_marginBottom="20dp"
             android:backgroundTint="?attr/colorAccent"
             android:text="@string/capture"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="?attr/background"
+            android:textStyle="bold"/>
 
 </FrameLayout>

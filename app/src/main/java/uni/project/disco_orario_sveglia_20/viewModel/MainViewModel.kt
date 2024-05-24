@@ -69,7 +69,6 @@ class MainViewModel(
         return
 
     }
-    //TODO: apk doesnt work on realease -> put another api key
     //TODO:try other devices
     fun getLastLocation(activity: Activity) {
         if(ActivityCompat.checkSelfPermission(

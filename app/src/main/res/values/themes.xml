@@ -1,24 +1,25 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.Disco_Orario_Sveglia_20" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:windowBackground">@color/primaryColor</item>
+        <item name="android:windowBackground">@color/background</item>
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorSecondary">@color/primaryColor</item>
         <item name="colorTertiary">@color/tertiaryColor</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/primaryColor</item>
         <item name="colorSwitchThumbNormal">@color/tertiaryColor</item>
+        <item name="background">@color/background</item>
         <item name="android:fontFamily">@font/dmsans_regular</item>
+        <item name="materialTimePickerTheme">@style/Widget.App.TimePicker.Clock</item>
     </style>
 
     <style name="Theme.Disco_Orario_Sveglia_20" parent="Base.Theme.Disco_Orario_Sveglia_20" />
 
     <style name="BottomNavigation">
-        <item name="android:background">@color/secondaryColor</item>
-        <item name="itemIconTint">@color/colorAccent</item>
-        <item name="itemTextColor">@color/colorAccent</item>
+        <item name="android:background">@color/bottomNav</item>
+        <item name="itemIconTint">@color/primaryColor</item>
+        <item name="itemTextColor">@color/primaryColor</item>
         <item name="paddingStart">10dp</item>
         <item name="paddingEnd">10dp</item>
     </style>
@@ -27,5 +28,13 @@
         <item name="boxBackgroundColor">@android:color/transparent</item>
         <item name="boxStrokeWidth">0dp</item>
         <item name="boxStrokeWidthFocused">0dp</item>
+    </style>
+
+    <style name="Widget.App.TimePicker.Clock" parent="Widget.MaterialComponents.TimePicker.Clock">
+        <item name="clockFaceBackgroundColor">@color/background</item>
+        <item name="android:headerBackground">@color/tertiaryColor</item>
+        <item name="android:textColor">@color/primaryColor</item>
+        <item name="clockHandColor">?attr/colorPrimary</item>
+        <item name="clockNumberTextColor">?attr/colorPrimary</item>
     </style>
 </resources>
