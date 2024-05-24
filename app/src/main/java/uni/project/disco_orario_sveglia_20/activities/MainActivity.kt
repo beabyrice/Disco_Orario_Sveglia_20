@@ -1,6 +1,7 @@
 package uni.project.disco_orario_sveglia_20.activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
@@ -31,6 +32,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        sharedPref.edit().putBoolean("hasAlreadyRunned", false).apply()
 
         setUpViews()
         setUpViewModel()
@@ -63,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, R.string.wrong_format, Toast.LENGTH_LONG).show()
                 }
             } else {
-                Toast.makeText(this, R.string.camera_permission, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.location_permission, Toast.LENGTH_LONG).show()
                 mainViewModel.getLastLocation(this)
             }
         }
@@ -122,6 +126,12 @@ class MainActivity : AppCompatActivity() {
         val parkingRepository = ParkingRepository(ParkingDatabase(this))
         val viewModelProviderFactory = ViewModelFactory(application, parkingRepository)
         mainViewModel = ViewModelProvider(this, viewModelProviderFactory)[MainViewModel::class.java]
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        sharedPref.edit().putBoolean("hasAlreadyRunned", false).apply()
     }
 
 }

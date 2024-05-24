@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.Disco_Orario_Sveglia_20" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowBackground">@color/primaryColorDark</item>
@@ -10,6 +10,7 @@
         <item name="colorAccent">@color/colorAccentDark</item>
         <item name="colorControlActivated">@color/colorAccentDark</item>
         <item name="colorSwitchThumbNormal">@color/tertiaryColorDark</item>
+        <item name="android:fontFamily">@font/dmsans_regular</item>
     </style>
 
     <style name="BottomNavigation">

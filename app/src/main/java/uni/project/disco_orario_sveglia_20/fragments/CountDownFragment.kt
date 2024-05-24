@@ -16,6 +16,7 @@ import uni.project.disco_orario_sveglia_20.databinding.FragmentCountDownBinding
 import uni.project.disco_orario_sveglia_20.repository.TimeRepository
 import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
 
+//TODO: doesnt work when timer ends and you open the app
 class CountDownFragment : Fragment(R.layout.fragment_count_down) {
 
     private lateinit var viewModel: ParkingViewModel
@@ -44,25 +45,36 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (intent != null) {
                     updateUI(intent,duration,binding.textClock)
+                    if(duration == 0L){
+                        binding.textView4.text = getText(R.string.countdown_finished_text)
+                    }
                 }
             }
 
         }
-
-        val intent = Intent((activity as ParkingDataActivity), CountDownTimerService::class.java)
-
-        (activity as ParkingDataActivity).startService(intent)
-
         binding.arrivalTime.text = viewModel.getArrivalTime()?.let { TimeRepository.timerFormat(it) }
-
         binding.progressBar.max = progressTime.toInt()
         binding.progressBar.progress = progressTime.toInt()
 
+        val hasTimerRunned = sharedPref.getBoolean("hasAlreadyRunned", false)
+
+        if (!hasTimerRunned) {
+            val intent =
+                Intent((activity as ParkingDataActivity), CountDownTimerService::class.java)
+            (activity as ParkingDataActivity).startService(intent)
+        } else {
+            binding.textClock.text = TimeRepository.timerFormat(0)
+            binding.progressBar.progress = 0
+            binding.textView4.text = getText(R.string.countdown_finished_text)
+        }
+
         binding.button.setOnClickListener {
             viewModel.deleteParking()
+            sharedPref.edit().putBoolean("hasAlreadyRunned", false).apply()
             val homeIntent = Intent((activity as ParkingDataActivity), MainActivity::class.java)
             startActivity(homeIntent)
             (activity as ParkingDataActivity).finish()
+
         }
     }
 

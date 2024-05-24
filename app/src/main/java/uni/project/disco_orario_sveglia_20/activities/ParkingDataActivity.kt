@@ -1,5 +1,6 @@
 package uni.project.disco_orario_sveglia_20.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -31,14 +32,19 @@ class ParkingDataActivity : AppCompatActivity() {
             parkingViewModel.getCameraPermission(this)
         }
 
+        val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val hasTimerRunned = sharedPref.getBoolean("hasAlreadyRunned", false)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.homeNavHostFragment) as NavHostFragment
         val navController = navHostFragment.findNavController()
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        val serviceIntent = Intent(this, CountDownTimerService::class.java)
-        startForegroundService(serviceIntent)
+        if(!hasTimerRunned){
+            val serviceIntent = Intent(this, CountDownTimerService::class.java)
+            startForegroundService(serviceIntent)
+        }
+
     }
 
     private fun setUpViewModel() {
@@ -51,6 +57,8 @@ class ParkingDataActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         parkingViewModel.deleteImageFile(this)
+        val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        sharedPref.edit().putBoolean("hasAlreadyRunned", false).apply()
     }
 
     override fun onRequestPermissionsResult(
