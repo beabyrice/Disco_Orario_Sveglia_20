@@ -13,6 +13,7 @@ import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+//TODO: loading dialog???
 class CameraFragment : Fragment(R.layout.fragment_camera) {
 
     private lateinit var viewModel: ParkingViewModel

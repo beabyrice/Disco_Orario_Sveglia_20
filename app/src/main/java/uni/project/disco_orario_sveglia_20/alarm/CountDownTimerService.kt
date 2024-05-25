@@ -10,7 +10,6 @@ import android.content.Intent
 import android.os.Build
 import android.os.CountDownTimer
 import android.os.IBinder
-import android.os.PowerManager
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -18,6 +17,7 @@ import androidx.core.app.NotificationCompat
 import uni.project.disco_orario_sveglia_20.R
 import uni.project.disco_orario_sveglia_20.activities.ParkingDataActivity
 
+//TODO: wakelock !
 class CountDownTimerService : Service() {
 
     companion object {
@@ -34,7 +34,7 @@ class CountDownTimerService : Service() {
         super.onCreate()
 
         createNotificationChannel()
-        startForeground(1, createNotification())
+        startForeground(1, countdownNotification())
 
         val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         val durationInMillis = sharedPref.getLong("durationInMillis", 20000) // Default duration if not foun
@@ -54,7 +54,7 @@ class CountDownTimerService : Service() {
         countDownTimer.start()
     }
 
-    private fun createNotification(): Notification {
+    private fun countdownNotification(): Notification {
         val notificationIntent = Intent(this, ParkingDataActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
 
@@ -70,7 +70,7 @@ class CountDownTimerService : Service() {
         val serviceChannel = NotificationChannel(
             CHANNEL_ID,
             "Countdown Timer Service Channel",
-            NotificationManager.IMPORTANCE_DEFAULT
+            NotificationManager.IMPORTANCE_LOW
         )
         val alarmChannel = NotificationChannel(
             ALARM_CHANNEL_ID,
@@ -87,22 +87,14 @@ class CountDownTimerService : Service() {
     }
 
     private fun triggerAlarm() {
-
-        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
-        val wakeLock = powerManager.newWakeLock(
-            PowerManager.PARTIAL_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.ON_AFTER_RELEASE,
-            "uni.project.disco_orario_sveglia_20.alarm:Wakelock"
-        )
-        wakeLock.acquire(5000)
-
-        // Vibrate the phone
+        val vibrationWaveFormDurationPattern = longArrayOf(0, 10, 200, 500, 700, 1000, 300, 200, 50, 10)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager = this.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             val vibrator = vibratorManager.defaultVibrator
-            vibrator.vibrate(VibrationEffect.createOneShot(4000,100))
+            vibrator.vibrate(VibrationEffect.createWaveform(vibrationWaveFormDurationPattern, -1))
         } else {
             val vibrator = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(VibrationEffect.createOneShot(4000,100))
+            vibrator.vibrate(VibrationEffect.createWaveform(vibrationWaveFormDurationPattern, -1))
         }
 
         val notificationIntent = Intent(this, ParkingDataActivity::class.java)
