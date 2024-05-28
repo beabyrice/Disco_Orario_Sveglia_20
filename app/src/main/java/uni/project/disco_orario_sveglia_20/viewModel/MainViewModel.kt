@@ -69,7 +69,6 @@ class MainViewModel(
         return
 
     }
-    //TODO:try other devices
     fun getLastLocation(activity: Activity) {
         if(ActivityCompat.checkSelfPermission(
                 activity,

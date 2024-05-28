@@ -1,5 +1,6 @@
 package uni.project.disco_orario_sveglia_20.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -19,6 +20,7 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     private lateinit var viewModel: ParkingViewModel
     private lateinit var binding: FragmentCameraBinding
     private lateinit var cameraExecutor: ExecutorService
+    private lateinit var loadingDialog: Dialog
 
     private val contract = registerForActivityResult(ActivityResultContracts.TakePicture()) {}
 
@@ -46,14 +48,34 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
         super.onResume()
         binding.imageView.setImageDrawable(null)
         viewModel.getImageFile((activity as ParkingDataActivity))?.let {
-            binding.imageView.load(it)
+            showLoadingDialog()
+            binding.imageView.load(it) {
+                listener(
+                    onStart = { /* Do nothing */ },
+                    onSuccess = { _, _ -> dismissLoadingDialog() },
+                    onError = { _, _ -> dismissLoadingDialog() }
+                )
+            }
         }
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
         contract.unregister()
+        cameraExecutor.shutdown()
+    }
+
+    private fun showLoadingDialog() {
+        loadingDialog = Dialog((activity as ParkingDataActivity))
+        loadingDialog.setContentView(R.layout.loading_dialog)
+        loadingDialog.setCancelable(false)
+        loadingDialog.show()
+    }
+
+    private fun dismissLoadingDialog() {
+        if ( loadingDialog.isShowing) {
+            loadingDialog.dismiss()
+        }
     }
 
 

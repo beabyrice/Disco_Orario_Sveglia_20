@@ -1,21 +1,28 @@
 package uni.project.disco_orario_sveglia_20.fragments
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import uni.project.disco_orario_sveglia_20.R
 import uni.project.disco_orario_sveglia_20.activities.ParkingDataActivity
 import uni.project.disco_orario_sveglia_20.databinding.FragmentMyCarBinding
 import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
+
 
 class MyCarFragment : Fragment(R.layout.fragment_my_car), OnMapReadyCallback {
 
@@ -68,7 +75,26 @@ class MyCarFragment : Fragment(R.layout.fragment_my_car), OnMapReadyCallback {
     }
 
     private fun placeMarkerOnMap(currentLatLong: LatLng) {
-        val markerOptions = MarkerOptions().position(currentLatLong)
+        val markerOptions = MarkerOptions().position(currentLatLong).icon(bitmapFromVector((activity as ParkingDataActivity), R.drawable.baseline_directions_car_filled_24))
         mMap.addMarker(markerOptions)
+    }
+
+    private fun bitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor {
+        val vectorDrawable = ContextCompat.getDrawable(
+            context, vectorResId
+        )
+        vectorDrawable!!.setBounds(
+            0, 0, vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight
+        )
+
+        val bitmap = Bitmap.createBitmap(
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
 }
