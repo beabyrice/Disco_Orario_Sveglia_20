@@ -75,7 +75,10 @@ class MyCarFragment : Fragment(R.layout.fragment_my_car), OnMapReadyCallback {
     }
 
     private fun placeMarkerOnMap(currentLatLong: LatLng) {
-        val markerOptions = MarkerOptions().position(currentLatLong).icon(bitmapFromVector((activity as ParkingDataActivity), R.drawable.baseline_directions_car_filled_24))
+        val markerOptions = MarkerOptions()
+            .position(currentLatLong)
+            .title(getString(R.string.get_direction))
+            .icon(bitmapFromVector((activity as ParkingDataActivity), R.drawable.baseline_directions_car_filled_24))
         mMap.addMarker(markerOptions)
     }
 

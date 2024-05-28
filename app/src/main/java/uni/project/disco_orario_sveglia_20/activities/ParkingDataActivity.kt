@@ -2,7 +2,10 @@ package uni.project.disco_orario_sveglia_20.activities
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -22,7 +25,16 @@ class ParkingDataActivity : AppCompatActivity() {
     lateinit var parkingViewModel: ParkingViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
+        if(intent.getBooleanExtra("stop_vibration", false)){
+            val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                (getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
+            } else {
+                getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            }
+            vibrator.cancel()
+        }
         setUpViewModel()
         parkingViewModel.getParking()
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -33,14 +45,14 @@ class ParkingDataActivity : AppCompatActivity() {
         }
 
         val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        val hasTimerRunned = sharedPref.getBoolean("hasAlreadyRunned", false)
+        val hasTimerRun = sharedPref.getBoolean("hasAlreadyRun", false)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.homeNavHostFragment) as NavHostFragment
         val navController = navHostFragment.findNavController()
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        if(!hasTimerRunned){
+        if(!hasTimerRun){
             val serviceIntent = Intent(this, CountDownTimerService::class.java)
             startForegroundService(serviceIntent)
         }
@@ -58,7 +70,7 @@ class ParkingDataActivity : AppCompatActivity() {
         super.onDestroy()
         parkingViewModel.deleteImageFile(this)
         val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        sharedPref.edit().putBoolean("hasAlreadyRunned", false).apply()
+        sharedPref.edit().putBoolean("hasAlreadyRun", false).apply()
     }
 
     override fun onRequestPermissionsResult(

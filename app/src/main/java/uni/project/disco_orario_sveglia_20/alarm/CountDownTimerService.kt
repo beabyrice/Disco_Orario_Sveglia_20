@@ -10,6 +10,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.CountDownTimer
 import android.os.IBinder
+import android.os.PowerManager
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -17,7 +18,7 @@ import androidx.core.app.NotificationCompat
 import uni.project.disco_orario_sveglia_20.R
 import uni.project.disco_orario_sveglia_20.activities.ParkingDataActivity
 
-//TODO: wakelock !
+//TODO: stop vibration
 class CountDownTimerService : Service() {
 
     companion object {
@@ -37,18 +38,25 @@ class CountDownTimerService : Service() {
         startForeground(1, countdownNotification())
 
         val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        sharedPref.edit().putBoolean("warningSent", false).apply() // Reset flag
         val durationInMillis = sharedPref.getLong("durationInMillis", 20000) // Default duration if not foun
         countDownTimer = object : CountDownTimer(durationInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 intent.putExtra("countdown", millisUntilFinished)
                 sendBroadcast(intent)
+
+                if (millisUntilFinished <= 600000 && !sharedPref.getBoolean("warningSent", false)) {
+                    val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    notificationManager.notify(1, createWarningNotification())
+                    sharedPref.edit().putBoolean("warningSent", true).apply()
+                }
             }
 
             override fun onFinish() {
                 intent.putExtra("countdown", 0)
                 sendBroadcast(intent)
                 triggerAlarm()
-                sharedPref.edit().putBoolean("hasAlreadyRunned", true).apply()
+                sharedPref.edit().putBoolean("hasAlreadyRun", true).apply()
             }
         }
         countDownTimer.start()
@@ -59,10 +67,25 @@ class CountDownTimerService : Service() {
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Countdown Timer")
-            .setContentText("The timer is running...")
+            .setContentTitle(getString(R.string.timer_title))
+            .setContentText(getString(R.string.timer_running))
             .setSmallIcon(R.mipmap.ic_launcher_prova_round)
             .setContentIntent(pendingIntent)
+            .build()
+    }
+
+    private fun createWarningNotification(): Notification {
+        val notificationIntent = Intent(this, ParkingDataActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+        return NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(getString(R.string.timer_warning_title))
+            .setContentText(getString(R.string.timer_warning_message))
+            .setSmallIcon(R.mipmap.ic_launcher_prova_round)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
     }
 
@@ -87,24 +110,26 @@ class CountDownTimerService : Service() {
     }
 
     private fun triggerAlarm() {
-        val vibrationWaveFormDurationPattern = longArrayOf(0, 10, 200, 500, 700, 1000, 300, 200, 50, 10)
+        wakeApp()
+        val vibrationWaveFormDurationPattern = longArrayOf(0, 500, 500) // Looping pattern for vibration
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager = this.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             val vibrator = vibratorManager.defaultVibrator
-            vibrator.vibrate(VibrationEffect.createWaveform(vibrationWaveFormDurationPattern, -1))
+            vibrator.vibrate(VibrationEffect.createWaveform(vibrationWaveFormDurationPattern, 0))
         } else {
             val vibrator = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator.vibrate(VibrationEffect.createWaveform(vibrationWaveFormDurationPattern, -1))
+            vibrator.vibrate(VibrationEffect.createWaveform(vibrationWaveFormDurationPattern, 0))
         }
-
-        val notificationIntent = Intent(this, ParkingDataActivity::class.java)
+        val notificationIntent = Intent(this, ParkingDataActivity::class.java).apply {
+            putExtra("stop_vibration", true)
+        }
         val pendingIntent = PendingIntent.getActivity(
             this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
         val alarmNotification = NotificationCompat.Builder(this, ALARM_CHANNEL_ID)
-            .setContentTitle("Timer Finished")
-            .setContentText("The countdown timer has finished.")
+            .setContentTitle(getString(R.string.timer_ended_title))
+            .setContentText(getString(R.string.timer_ended))
             .setSmallIcon(R.mipmap.ic_launcher_prova_round)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -125,5 +150,18 @@ class CountDownTimerService : Service() {
         return null
     }
 
+    private fun wakeApp() {
+        val pm = applicationContext.getSystemService(POWER_SERVICE) as PowerManager
+        val screenIsOn = pm.isInteractive
+        if (!screenIsOn) {
+            val wakeLockTag = packageName + "WAKELOCK"
+            val wakeLock = pm.newWakeLock(
+                PowerManager.FULL_WAKE_LOCK or
+                        PowerManager.ACQUIRE_CAUSES_WAKEUP or
+                        PowerManager.ON_AFTER_RELEASE, wakeLockTag
+            )
+            wakeLock.acquire(3000)
+        }
+    }
 
 }
