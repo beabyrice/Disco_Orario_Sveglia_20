@@ -67,7 +67,6 @@ class MyCarFragment : Fragment(R.layout.fragment_my_car), OnMapReadyCallback {
         }
         mMap.isMyLocationEnabled = true
         val location = viewModel.getMyCarLocation()
-
         if(location!= null){
             placeMarkerOnMap(location)
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12f))
@@ -83,21 +82,16 @@ class MyCarFragment : Fragment(R.layout.fragment_my_car), OnMapReadyCallback {
     }
 
     private fun bitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor {
-        val vectorDrawable = ContextCompat.getDrawable(
-            context, vectorResId
-        )
-        vectorDrawable!!.setBounds(
-            0, 0, vectorDrawable.intrinsicWidth,
-            vectorDrawable.intrinsicHeight
-        )
+        val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+            ?: throw IllegalArgumentException("Resource ID $vectorResId is not a valid vector drawable resource.")
 
-        val bitmap = Bitmap.createBitmap(
-            vectorDrawable.intrinsicWidth,
-            vectorDrawable.intrinsicHeight,
-            Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(bitmap)
-        vectorDrawable.draw(canvas)
-        return BitmapDescriptorFactory.fromBitmap(bitmap)
+        vectorDrawable.apply {
+            setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+            val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+            Canvas(bitmap).apply {
+                draw(this)
+            }
+            return BitmapDescriptorFactory.fromBitmap(bitmap)
+        }
     }
 }

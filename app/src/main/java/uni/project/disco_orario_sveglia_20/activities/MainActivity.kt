@@ -36,14 +36,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        sharedPref.edit().putBoolean("hasAlreadyRunned", false).apply()
+        sharedPref.edit().putBoolean("hasAlreadyRun", false).apply()
 
         setUpViews()
         setUpViewModel()
 
         mainViewModel.setFusedLocationProvider(this)
         if (mainViewModel.isLocationPermitted(this)){
-            mainViewModel.getLastLocation(this)
+            mainViewModel.getLocationUpdate(this)
         } else {
             mainViewModel.getLocationPermission(this)
         }
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                 }
             } else {
                 Toast.makeText(this, R.string.location_permission, Toast.LENGTH_LONG).show()
-                mainViewModel.getLastLocation(this)
+                mainViewModel.getLocationUpdate(this)
             }
         }
 
@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 )
                 timePickerDialog.setOnDismissListener {
-                    text.clearFocus() // Clear focus to prevent the dialog from reopening
+                    text.clearFocus()
                 }
                 timePickerDialog.show()
             }
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        sharedPref.edit().putBoolean("hasAlreadyRunned", false).apply()
+        sharedPref.edit().putBoolean("hasAlreadyRun", false).apply()
     }
 
 }

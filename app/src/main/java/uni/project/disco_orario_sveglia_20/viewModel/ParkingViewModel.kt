@@ -28,7 +28,6 @@ class ParkingViewModel(
 ) : AndroidViewModel(app) {
 
     private val CAMERA_CODE = 2
-
     private var parkingFlow = MutableStateFlow<Parking?>(null)
     private val parking = parkingFlow.asStateFlow()
 
@@ -127,7 +126,6 @@ class ParkingViewModel(
                     .show()
             }
         }
-
     }
 
 }

@@ -30,7 +30,7 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding =FragmentCountDownBinding.bind(view)
+        binding = FragmentCountDownBinding.bind(view)
 
         viewModel = (activity as ParkingDataActivity).parkingViewModel
 
@@ -56,9 +56,9 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
         binding.progressBar.max = progressTime.toInt()
         binding.progressBar.progress = progressTime.toInt()
 
-        val hasTimerRunned = sharedPref.getBoolean("hasAlreadyRunned", false)
+        val hasTimerRun = sharedPref.getBoolean("hasAlreadyRun", false)
 
-        if (!hasTimerRunned) {
+        if (!hasTimerRun) {
             val intent =
                 Intent((activity as ParkingDataActivity), CountDownTimerService::class.java)
             (activity as ParkingDataActivity).startService(intent)
@@ -70,7 +70,7 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
 
         binding.button.setOnClickListener {
             viewModel.deleteParking()
-            sharedPref.edit().putBoolean("hasAlreadyRunned", false).apply()
+            sharedPref.edit().putBoolean("hasAlreadyRun", false).apply()
             val homeIntent = Intent((activity as ParkingDataActivity), MainActivity::class.java)
             startActivity(homeIntent)
             (activity as ParkingDataActivity).finish()
@@ -82,7 +82,6 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
         if(intent.extras != null){
             val millisUntilFinished = intent.getLongExtra("countdown", secondsLeft)
             binding.progressBar.progress = (millisUntilFinished/1000).toFloat().toInt()
-
             textView.text = TimeRepository.timerFormat(millisUntilFinished)
         }
     }

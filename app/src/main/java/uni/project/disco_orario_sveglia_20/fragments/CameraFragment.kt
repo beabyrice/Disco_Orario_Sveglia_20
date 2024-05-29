@@ -50,7 +50,6 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
             showLoadingDialog()
             binding.imageView.load(it) {
                 listener(
-                    onStart = { /* Do nothing */ },
                     onSuccess = { _, _ -> dismissLoadingDialog() },
                     onError = { _, _ -> dismissLoadingDialog() }
                 )
@@ -66,9 +65,11 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
 
     private fun showLoadingDialog() {
         loadingDialog = Dialog((activity as ParkingDataActivity))
-        loadingDialog.setContentView(R.layout.loading_dialog)
-        loadingDialog.setCancelable(false)
-        loadingDialog.show()
+        loadingDialog.apply {
+            setContentView(R.layout.loading_dialog)
+            setCancelable(false)
+            show()
+        }
     }
 
     private fun dismissLoadingDialog() {

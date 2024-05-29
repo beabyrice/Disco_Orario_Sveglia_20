@@ -109,9 +109,10 @@ class CountDownTimerService : Service() {
         manager.createNotificationChannel(alarmChannel)
     }
 
+    //TODO: setVibrate() ?
     private fun triggerAlarm() {
         wakeApp()
-        val vibrationWaveFormDurationPattern = longArrayOf(0, 500, 500) // Looping pattern for vibration
+        val vibrationWaveFormDurationPattern = longArrayOf(0, 10, 200, 500, 700, 200, 50, 10) // Looping pattern for vibration
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager = this.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             val vibrator = vibratorManager.defaultVibrator

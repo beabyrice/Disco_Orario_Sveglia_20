@@ -67,9 +67,9 @@ class MainViewModel(
     fun getLocationPermission(activity: Activity){
         ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), FINE_PERMISSION_CODE)
         return
-
     }
-    fun getLastLocation(activity: Activity) {
+
+    fun getLocationUpdate(activity: Activity) {
         if(ActivityCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -86,7 +86,7 @@ class MainViewModel(
         return this@MainViewModel::currentLocation.isInitialized
     }
 
-    private fun getParking(): Parking{
+    private fun setParking(): Parking{
         return Parking(
             latitude = currentLocation.latitude,
             longitude = currentLocation.longitude,
@@ -105,7 +105,7 @@ class MainViewModel(
 
     fun upsertParking(){
         viewModelScope.launch(Dispatchers.IO) {
-            val parking = getParking()
+            val parking = setParking()
             parkingRepository.upsertParking(parking)
         }
     }
@@ -113,7 +113,7 @@ class MainViewModel(
     fun handlePermissionsResult(requestCode: Int, grantResults: IntArray, activity: Activity) {
         if(requestCode == FINE_PERMISSION_CODE){
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                getLastLocation(activity)
+                getLocationUpdate(activity)
             }else{
                 Toast.makeText(activity, R.string.location_permission,Toast.LENGTH_SHORT).show()
             }

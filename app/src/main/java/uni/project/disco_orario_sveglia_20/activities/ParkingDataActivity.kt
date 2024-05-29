@@ -47,8 +47,7 @@ class ParkingDataActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         val hasTimerRun = sharedPref.getBoolean("hasAlreadyRun", false)
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.homeNavHostFragment) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.homeNavHostFragment) as NavHostFragment
         val navController = navHostFragment.findNavController()
         binding.bottomNavigationView.setupWithNavController(navController)
 

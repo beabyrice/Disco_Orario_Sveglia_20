@@ -4,7 +4,7 @@
     <string name="welcome">Welcome!</string>
     <string name="auto">A</string>
     <string name="manual">M</string>
-    <string name="parking_duration_00_00">parking duration 00:00</string>
+    <string name="parking_duration_00_00">parking duration</string>
     <string name="confirm">Confirm</string>
     <string name="take_a_photo">Click \"Capture\" to take a photo</string>
     <string name="capture">Capture</string>
