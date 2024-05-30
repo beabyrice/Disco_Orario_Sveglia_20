@@ -24,8 +24,9 @@ import java.io.File
 
 class ParkingViewModel(
     app: Application,
-    private val parkingRepository: ParkingRepository
 ) : AndroidViewModel(app) {
+
+    private val repository = ParkingRepository(app)
 
     private val CAMERA_CODE = 2
     private var parkingFlow = MutableStateFlow<Parking?>(null)
@@ -33,13 +34,13 @@ class ParkingViewModel(
 
     fun getParking() {
         viewModelScope.launch(Dispatchers.IO) {
-            parkingFlow.update { parkingRepository.getParking() }
+            parkingFlow.update { repository.getParking() }
         }
     }
 
     fun deleteParking() {
         viewModelScope.launch(Dispatchers.IO) {
-            parking.value?.let { parkingRepository.deleteParking(it) }
+            parking.value?.let { repository.deleteParking(it) }
         }
     }
 

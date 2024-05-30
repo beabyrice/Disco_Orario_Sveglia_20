@@ -1,6 +1,7 @@
 package uni.project.disco_orario_sveglia_20.fragments
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -26,17 +27,16 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCameraBinding.bind(view)
-        viewModel = (activity as ParkingDataActivity).parkingViewModel
+        val activity = activity as ParkingDataActivity
+        viewModel = activity.parkingViewModel
 
         binding.captureButton.setOnClickListener {
-            if (viewModel.isCameraPermissionOk((activity as ParkingDataActivity)))
+            if (viewModel.isCameraPermissionOk(activity))
             {
-                viewModel.deleteImageFile((activity as ParkingDataActivity))
-                contract.launch(viewModel.createImageUri((activity as ParkingDataActivity)))
+                contract.launch(viewModel.createImageUri(activity))
             } else {
-                viewModel.deleteImageFile((activity as ParkingDataActivity))
-                Toast.makeText((activity as ParkingDataActivity), R.string.camera_permission, Toast.LENGTH_SHORT)
-                    .show()
+                viewModel.getCameraPermission(activity)
+                showToast(R.string.camera_permission,activity)
             }
         }
 
@@ -45,13 +45,17 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
 
     override fun onResume() {
         super.onResume()
+        val activity = activity as ParkingDataActivity
         binding.imageView.setImageDrawable(null)
-        viewModel.getImageFile((activity as ParkingDataActivity))?.let {
+        viewModel.getImageFile(activity)?.let {
             showLoadingDialog()
             binding.imageView.load(it) {
                 listener(
                     onSuccess = { _, _ -> dismissLoadingDialog() },
-                    onError = { _, _ -> dismissLoadingDialog() }
+                    onError = { _, _ ->
+                        dismissLoadingDialog()
+                        showToast(R.string.generic_error, activity)
+                    }
                 )
             }
         }
@@ -64,7 +68,8 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     }
 
     private fun showLoadingDialog() {
-        loadingDialog = Dialog((activity as ParkingDataActivity))
+        val activity = activity as ParkingDataActivity
+        loadingDialog = Dialog(activity)
         loadingDialog.apply {
             setContentView(R.layout.loading_dialog)
             setCancelable(false)
@@ -73,10 +78,11 @@ class CameraFragment : Fragment(R.layout.fragment_camera) {
     }
 
     private fun dismissLoadingDialog() {
-        if ( loadingDialog.isShowing) {
-            loadingDialog.dismiss()
-        }
+        loadingDialog.takeIf { it.isShowing }?.dismiss()
     }
 
+    private fun showToast(messageResId: Int, context: Context) {
+        Toast.makeText(context, messageResId, Toast.LENGTH_LONG).show()
+    }
 
 }

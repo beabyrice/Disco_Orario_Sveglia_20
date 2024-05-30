@@ -26,8 +26,9 @@ import java.util.concurrent.TimeUnit
 
 class MainViewModel(
     app: Application,
-    private val parkingRepository: ParkingRepository
 ) : AndroidViewModel(app){
+
+    private val repository = ParkingRepository(app)
 
     private val FINE_PERMISSION_CODE = 1
     lateinit var currentLocation : LatLng
@@ -68,6 +69,8 @@ class MainViewModel(
         ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), FINE_PERMISSION_CODE)
         return
     }
+
+
 
     fun getLocationUpdate(activity: Activity) {
         if(ActivityCompat.checkSelfPermission(
@@ -114,7 +117,7 @@ class MainViewModel(
     fun upsertParking(){
         viewModelScope.launch(Dispatchers.IO) {
             val parking = setParking()
-            parkingRepository.upsertParking(parking)
+            repository.upsertParking(parking)
         }
     }
 

@@ -9,23 +9,20 @@ import android.util.TypedValue
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SwitchCompat
-import androidx.lifecycle.ViewModelProvider
 import uni.project.disco_orario_sveglia_20.R
-import uni.project.disco_orario_sveglia_20.db.ParkingDatabase
-import uni.project.disco_orario_sveglia_20.repository.ParkingRepository
 import uni.project.disco_orario_sveglia_20.repository.TimeRepository
 import uni.project.disco_orario_sveglia_20.viewModel.MainViewModel
-import uni.project.disco_orario_sveglia_20.viewModel.ViewModelFactory
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel : MainViewModel by viewModels()
     private lateinit var manualEditText: EditText
     private lateinit var durationEditText: EditText
     private lateinit var confirmButton: Button
@@ -33,8 +30,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val parkingRepository = ParkingRepository(ParkingDatabase(this))
-        setUpViewModel(parkingRepository)
         setContentView(R.layout.activity_main)
         setUpViews()
 
@@ -102,11 +97,6 @@ class MainActivity : AppCompatActivity() {
             setHintTextColor(getColor(typedValue.resourceId))
             background = AppCompatResources.getDrawable(activity, R.drawable.input_background)
         }
-    }
-
-    private fun setUpViewModel(parkingRepository: ParkingRepository) {
-        val viewModelProviderFactory = ViewModelFactory(application, parkingRepository)
-        mainViewModel = ViewModelProvider(this, viewModelProviderFactory)[MainViewModel::class.java]
     }
 
     private fun setTimePicker(text: EditText){

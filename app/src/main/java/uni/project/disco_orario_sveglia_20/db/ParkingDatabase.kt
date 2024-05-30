@@ -11,7 +11,7 @@ import uni.project.disco_orario_sveglia_20.model.Parking
     version = 1
 )
 abstract class ParkingDatabase: RoomDatabase() {
-    abstract val dao: ParkingDao
+    abstract fun dao(): ParkingDao
 
     companion object{
         @Volatile
