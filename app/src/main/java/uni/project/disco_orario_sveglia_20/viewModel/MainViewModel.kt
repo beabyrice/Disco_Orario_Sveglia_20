@@ -54,7 +54,7 @@ class MainViewModel(
         }
     }
 
-    fun isLocationPermitted(activity: Activity): Boolean {
+    private fun isLocationPermitted(activity: Activity): Boolean {
         return !(ActivityCompat.checkSelfPermission(
             activity,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -64,7 +64,7 @@ class MainViewModel(
         ) != PackageManager.PERMISSION_GRANTED)
     }
 
-    fun getLocationPermission(activity: Activity){
+    private fun getLocationPermission(activity: Activity){
         ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), FINE_PERMISSION_CODE)
         return
     }
@@ -86,6 +86,14 @@ class MainViewModel(
         return this@MainViewModel::currentLocation.isInitialized
     }
 
+    fun manageLocationPermission(activity: Activity){
+        if (isLocationPermitted(activity)){
+            getLocationUpdate(activity)
+        } else {
+            getLocationPermission(activity)
+        }
+    }
+
     private fun setParking(): Parking{
         return Parking(
             latitude = currentLocation.latitude,
@@ -99,7 +107,7 @@ class MainViewModel(
         parkingDuration = TimeRepository.getLongSecondsFromString(duration)
     }
 
-    fun setTime(time: String){
+    fun setArrivalTime(time: String){
         currentTime = TimeRepository.getLongSecondsFromString(time)
     }
 

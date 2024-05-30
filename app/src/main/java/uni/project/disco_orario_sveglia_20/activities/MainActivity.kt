@@ -28,49 +28,28 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var manualEditText: EditText
     private lateinit var durationEditText: EditText
-    private lateinit var confirm: Button
+    private lateinit var confirmButton: Button
     private lateinit var switchCompat: SwitchCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val parkingRepository = ParkingRepository(ParkingDatabase(this))
+        setUpViewModel(parkingRepository)
         setContentView(R.layout.activity_main)
+        setUpViews()
+
 
         val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         sharedPref.edit().putBoolean("hasAlreadyRun", false).apply()
 
-        setUpViews()
-        setUpViewModel()
-
         mainViewModel.setFusedLocationProvider(this)
-        if (mainViewModel.isLocationPermitted(this)){
-            mainViewModel.getLocationUpdate(this)
-        } else {
-            mainViewModel.getLocationPermission(this)
-        }
-        confirm.setOnClickListener {
-            if (mainViewModel.isLocationInitialized()) {
-                if (
-                    (TimeRepository.isValidTime(manualEditText.hint.toString()) || TimeRepository.isValidTime(
-                        manualEditText.text.toString()
-                    ))
-                    && TimeRepository.isValidTime(durationEditText.text.toString())
-                ) {
-                    if (switchCompat.isChecked && TimeRepository.isValidTime(manualEditText.text.toString())) {
-                        mainViewModel.setTime(manualEditText.text.toString())
-                    } else {
-                        mainViewModel.setTime(manualEditText.hint.toString())
-                    }
-                    mainViewModel.setParkingDuration(durationEditText.text.toString())
-                    mainViewModel.upsertParking()
+        mainViewModel.manageLocationPermission(this)
 
-                    val intent = Intent(this, ParkingDataActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(this, R.string.wrong_format, Toast.LENGTH_LONG).show()
-                }
+        confirmButton.setOnClickListener {
+            if (mainViewModel.isLocationInitialized()) {
+                handleConfirmClick()
             } else {
-                Toast.makeText(this, R.string.location_permission, Toast.LENGTH_LONG).show()
+                showToast(R.string.current_location_not_initialized)
                 mainViewModel.getLocationUpdate(this)
             }
         }
@@ -87,21 +66,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpViews() {
-        val activity = this
-        manualEditText = findViewById(R.id.manualEditText)
-        manualEditText.hint =
-            LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")).toString()
-        setTimePicker(manualEditText)
-        durationEditText = findViewById(R.id.durationEditText)
-        setTimePicker(durationEditText)
-        confirm = findViewById(R.id.manualTimeBt)
-        switchCompat = findViewById(R.id.switch1)
-        switchCompat.apply {
+        manualEditText = findViewById<EditText?>(R.id.manualEditText).apply {
+            hint = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")).toString()
+            setTimePicker(this)
+        }
+        durationEditText = findViewById<EditText?>(R.id.durationEditText).apply {
+            setTimePicker(this)
+        }
+        confirmButton = findViewById(R.id.manualTimeBt)
+        switchCompat = findViewById<SwitchCompat>(R.id.switch1).apply {
             setThumbResource(R.drawable.switch_thumb_custom)
             setTrackResource(R.drawable.switch_track_custom)
             setOnCheckedChangeListener { button, _ ->
-                if (button.isChecked) enableManualInsertion(activity)
-                else backToAutomaticInsertion(activity)
+                if (button.isChecked) enableManualInsertion(this@MainActivity)
+                else backToAutomaticInsertion(this@MainActivity)
             }
         }
     }
@@ -118,17 +96,15 @@ class MainActivity : AppCompatActivity() {
     private fun enableManualInsertion(activity: Activity) {
         val typedValue = TypedValue()
         this.theme.resolveAttribute(androidx.appcompat.R.attr.colorPrimary, typedValue, true)
-        val color = typedValue.resourceId
         manualEditText.apply {
             isFocusable = true
             isFocusableInTouchMode = true
-            setHintTextColor(getColor(color))
+            setHintTextColor(getColor(typedValue.resourceId))
             background = AppCompatResources.getDrawable(activity, R.drawable.input_background)
         }
     }
 
-    private fun setUpViewModel() {
-        val parkingRepository = ParkingRepository(ParkingDatabase(this))
+    private fun setUpViewModel(parkingRepository: ParkingRepository) {
         val viewModelProviderFactory = ViewModelFactory(application, parkingRepository)
         mainViewModel = ViewModelProvider(this, viewModelProviderFactory)[MainViewModel::class.java]
     }
@@ -156,10 +132,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        sharedPref.edit().putBoolean("hasAlreadyRun", false).apply()
+    private fun handleConfirmClick() {
+        val manualTime = manualEditText.text.toString()
+        val hintTime = manualEditText.hint.toString()
+        val durationTime = durationEditText.text.toString()
+
+        if ((TimeRepository.isValidTime(manualTime) || TimeRepository.isValidTime(hintTime)) &&
+            TimeRepository.isValidTime(durationTime)) {
+            if (switchCompat.isChecked && TimeRepository.isValidTime(manualTime)) {
+                mainViewModel.setArrivalTime(manualTime)
+            } else {
+                mainViewModel.setArrivalTime(hintTime)
+            }
+            mainViewModel.setParkingDuration(durationTime)
+            mainViewModel.upsertParking()
+
+            startActivity(Intent(this, ParkingDataActivity::class.java))
+            finish()
+        } else {
+            showToast(R.string.wrong_format)
+        }
     }
 
+    private fun showToast(messageResId: Int) {
+        Toast.makeText(this, messageResId, Toast.LENGTH_LONG).show()
+    }
 }

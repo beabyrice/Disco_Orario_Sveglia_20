@@ -15,7 +15,7 @@
     <string name="countdown_finished_text">Il disco orario è scaduto, vai alla macchina!</string>
     <string name="camera_permission">permesso fotocamera non accettato, chiudere l\'app e cambiare le impostazioni</string>
     <string name="wrong_format">formato inserito errato, usare 00:00</string>
-    <string name="location_permission">permesso posizione non accettato, chiudere l\'app e cambiare le impostazioni</string>
+    <string name="location_permission">permesso posizione non accettato, cambiare le impostazioni</string>
     <string name="get_direction">Clicca in basso per la direzione</string>
     <string name="timer_title">Timer disco orario</string>
     <string name="timer_running">Il disco orario sta scadendo...</string>
@@ -23,4 +23,5 @@
     <string name="timer_ended">Il disco orario è scaduto, vai alla macchina!</string>
     <string name="timer_warning_title">Attenzione! Sta scadendo..</string>
     <string name="timer_warning_message">Mancano 10 minuti..</string>
+    <string name="current_location_not_initialized">Posizione non trovata, controlla connession eo impostazioni</string>
 </resources>

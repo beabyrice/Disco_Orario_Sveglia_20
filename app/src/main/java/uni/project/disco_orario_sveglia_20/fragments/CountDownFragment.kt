@@ -16,7 +16,6 @@ import uni.project.disco_orario_sveglia_20.databinding.FragmentCountDownBinding
 import uni.project.disco_orario_sveglia_20.repository.TimeRepository
 import uni.project.disco_orario_sveglia_20.viewModel.ParkingViewModel
 
-//TODO: doesnt work when timer ends and you open the app
 class CountDownFragment : Fragment(R.layout.fragment_count_down) {
 
     private lateinit var viewModel: ParkingViewModel
@@ -31,37 +30,33 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentCountDownBinding.bind(view)
-
         viewModel = (activity as ParkingDataActivity).parkingViewModel
 
         val sharedPref = (activity as ParkingDataActivity).getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val hasTimerRun = sharedPref.getBoolean("hasAlreadyRun", false)
+
         viewModel.getParkingDuration()?.let {
             sharedPref.edit().putLong("durationInMillis", it).apply()
             duration = it
             progressTime = (duration/1000).toFloat()
         }
-
-        broadcastReceiver = object : BroadcastReceiver(){
-            override fun onReceive(context: Context?, intent: Intent?) {
-                if (intent != null) {
-                    updateUI(intent,duration,binding.textClock)
-                    if(duration == 0L){
-                        binding.textView4.text = getText(R.string.countdown_finished_text)
-                    }
-                }
-            }
-
-        }
         binding.arrivalTime.text = viewModel.getArrivalTime()?.let { TimeRepository.timerFormat(it) }
         binding.progressBar.max = progressTime.toInt()
         binding.progressBar.progress = progressTime.toInt()
 
-        val hasTimerRun = sharedPref.getBoolean("hasAlreadyRun", false)
+        broadcastReceiver = object : BroadcastReceiver(){
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent != null) {
+                    updateUI(intent,binding.textClock)
+                }
+            }
+        }
+        (activity as ParkingDataActivity).registerReceiver(broadcastReceiver, IntentFilter(
+            CountDownTimerService.COUNTDOWN_BR)
+        )
 
         if (!hasTimerRun) {
-            val intent =
-                Intent((activity as ParkingDataActivity), CountDownTimerService::class.java)
-            (activity as ParkingDataActivity).startService(intent)
+            (activity as ParkingDataActivity).startForegroundService()
         } else {
             binding.textClock.text = TimeRepository.timerFormat(0)
             binding.progressBar.progress = 0
@@ -73,38 +68,26 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
             sharedPref.edit().putBoolean("hasAlreadyRun", false).apply()
             val homeIntent = Intent((activity as ParkingDataActivity), MainActivity::class.java)
             startActivity(homeIntent)
+            (activity as ParkingDataActivity)
+                .stopService(Intent((activity as ParkingDataActivity), CountDownTimerService::class.java))
             (activity as ParkingDataActivity).finish()
 
         }
     }
 
-    private fun updateUI(intent: Intent, secondsLeft: Long, textView: TextView) {
+    private fun updateUI(intent: Intent, textView: TextView) {
         if(intent.extras != null){
-            val millisUntilFinished = intent.getLongExtra("countdown", secondsLeft)
+            val millisUntilFinished = intent.getLongExtra("countdown", 0)
             binding.progressBar.progress = (millisUntilFinished/1000).toFloat().toInt()
             textView.text = TimeRepository.timerFormat(millisUntilFinished)
+            if(millisUntilFinished == 0L){
+                binding.textView4.text = getText(R.string.countdown_finished_text)
+            }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        (activity as ParkingDataActivity).registerReceiver(broadcastReceiver, IntentFilter(
-            CountDownTimerService.COUNTDOWN_BR)
-        )
-    }
-
-    override fun onStop() {
-        try {
-            (activity as ParkingDataActivity).unregisterReceiver(broadcastReceiver)
-        } catch (e: Exception) {
-            //
-        }
-        super.onStop()
     }
 
     override fun onDestroy() {
-        (activity as ParkingDataActivity).stopService(Intent((activity as ParkingDataActivity),
-            CountDownTimerService::class.java))
+        (activity as ParkingDataActivity).unregisterReceiver(broadcastReceiver)
         super.onDestroy()
     }
 

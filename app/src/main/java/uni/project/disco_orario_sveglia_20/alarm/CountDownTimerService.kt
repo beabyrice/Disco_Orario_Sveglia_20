@@ -38,7 +38,7 @@ class CountDownTimerService : Service() {
         startForeground(1, countdownNotification())
 
         val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        sharedPref.edit().putBoolean("warningSent", false).apply() // Reset flag
+        sharedPref.edit().putBoolean("warningSent", false).apply()
         val durationInMillis = sharedPref.getLong("durationInMillis", 20000) // Default duration if not foun
         countDownTimer = object : CountDownTimer(durationInMillis, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -109,7 +109,6 @@ class CountDownTimerService : Service() {
         manager.createNotificationChannel(alarmChannel)
     }
 
-    //TODO: setVibrate() ?
     private fun triggerAlarm() {
         wakeApp()
         val vibrationWaveFormDurationPattern = longArrayOf(0, 10, 200, 500, 700, 200, 50, 10) // Looping pattern for vibration
@@ -135,11 +134,12 @@ class CountDownTimerService : Service() {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setDefaults(NotificationCompat.DEFAULT_ALL) // Including sound, vibration, etc.
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
             .build()
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(2, alarmNotification)
+        notificationManager.cancelAll()
     }
 
     override fun onDestroy() {

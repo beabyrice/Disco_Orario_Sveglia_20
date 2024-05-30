@@ -14,7 +14,7 @@
     <string name="countdown_finished_text">Parking timer has ended, go to your car!</string>
     <string name="camera_permission">camera not permitted, close the app and retry</string>
     <string name="wrong_format">wrong format, use 00:00</string>
-    <string name="location_permission">location not permitted, close the app and change settings</string>
+    <string name="location_permission">location not permitted, change settings</string>
     <string name="get_direction">Click the icon below to get directions</string>
     <string name="timer_title">Parking timer</string>
     <string name="timer_running">The timer is running...</string>
@@ -22,4 +22,5 @@
     <string name="timer_ended">The parking timer has finished, go to your car!</string>
     <string name="timer_warning_title">Warning! Timer is ending..</string>
     <string name="timer_warning_message">Less than 10 minutes remaining</string>
+    <string name="current_location_not_initialized">Location not found, check connection or permission</string>
 </resources>

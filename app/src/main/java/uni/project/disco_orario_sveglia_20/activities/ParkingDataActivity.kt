@@ -2,10 +2,7 @@ package uni.project.disco_orario_sveglia_20.activities
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.os.Vibrator
-import android.os.VibratorManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -27,39 +24,23 @@ class ParkingDataActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        if(intent.getBooleanExtra("stop_vibration", false)){
-            val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                (getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
-            } else {
-                getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            }
-            vibrator.cancel()
-        }
-        setUpViewModel()
-        parkingViewModel.getParking()
+        val parkingRepository = ParkingRepository(ParkingDatabase(this))
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setUpViewModel(parkingRepository)
+        parkingViewModel.getParking()
 
-        if(!parkingViewModel.isCameraPermissionOk(this)) {
-            parkingViewModel.getCameraPermission(this)
-        }
-
-        val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
-        val hasTimerRun = sharedPref.getBoolean("hasAlreadyRun", false)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.homeNavHostFragment) as NavHostFragment
         val navController = navHostFragment.findNavController()
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        if(!hasTimerRun){
-            val serviceIntent = Intent(this, CountDownTimerService::class.java)
-            startForegroundService(serviceIntent)
+        if(!parkingViewModel.isCameraPermissionOk(this)) {
+            parkingViewModel.getCameraPermission(this)
         }
-
     }
 
-    private fun setUpViewModel() {
-        val parkingRepository = ParkingRepository(ParkingDatabase(this))
+    private fun setUpViewModel(parkingRepository: ParkingRepository) {
         val viewModelProviderFactory = ViewModelFactory(application, parkingRepository)
         parkingViewModel =
             ViewModelProvider(this, viewModelProviderFactory)[ParkingViewModel::class.java]
@@ -79,6 +60,13 @@ class ParkingDataActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         parkingViewModel.handlePermissionsResult(requestCode, grantResults, this)
+    }
+
+    fun startForegroundService(){
+        val serviceIntent = Intent(this, CountDownTimerService::class.java)
+        startForegroundService(serviceIntent)
+        val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        sharedPref.getBoolean("hasAlreadyRun", true)
     }
 
 }
