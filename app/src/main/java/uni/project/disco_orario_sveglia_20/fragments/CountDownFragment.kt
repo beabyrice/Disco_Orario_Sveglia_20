@@ -52,6 +52,9 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
                 }
             }
         }
+        parkingDataActivity.registerReceiver(broadcastReceiver, IntentFilter(
+            CountDownTimerService.COUNTDOWN_BR)
+        )
 
         if (!hasTimerRun) {
             parkingDataActivity.startForegroundService()
@@ -66,9 +69,9 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
             sharedPref.edit().putBoolean("hasAlreadyRun", false).apply()
             val homeIntent = Intent(parkingDataActivity, MainActivity::class.java)
             startActivity(homeIntent)
-            (activity as ParkingDataActivity)
+            parkingDataActivity
                 .stopService(Intent(parkingDataActivity, CountDownTimerService::class.java))
-            (activity as ParkingDataActivity).finish()
+            parkingDataActivity.finish()
 
         }
     }
@@ -84,16 +87,9 @@ class CountDownFragment : Fragment(R.layout.fragment_count_down) {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        (activity as ParkingDataActivity).registerReceiver(broadcastReceiver, IntentFilter(
-            CountDownTimerService.COUNTDOWN_BR)
-        )
-    }
-
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         (activity as ParkingDataActivity).unregisterReceiver(broadcastReceiver)
-    }
 
+    }
 }
