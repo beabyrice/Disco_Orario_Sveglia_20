@@ -1,3 +1,10 @@
+Disco Orario sveglia
+
+App che permette all'utente di impostare manualmente o automaticamente l'orario di arrivo ad un parcheggio a tempo.
+L'app deve ricordare quanto manca alla fine del disco orario e ricorda dove si ha parcheggiato(utilizzando gps e maps).
+
+Quando il Disco Orario sta per finire ,l'utente viene avvisato tramite apposita Sveglia con vibrazione.
+
 Tutte le richieste per questa applicazione sono state realizzate.
 
 Ho implementato la sveglia con vibrazione attraverso l'invio di una notifica finale che denota il termine del timer. 
