@@ -13,8 +13,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="130dp"
+            android:layout_marginHorizontal="@dimen/margin_small_mid"
+            android:layout_marginBottom="@dimen/height_very_big"
             android:contentDescription=" " />
 
         <TextView
@@ -22,9 +22,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="80dp"
+            android:layout_marginBottom="@dimen/width_big"
             android:text="@string/take_a_photo"
-            android:textSize="20sp"
+            android:textSize="@dimen/font_size_mid"
             />
 
         <Button
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="@dimen/margin_small_mid"
             android:backgroundTint="?attr/colorAccent"
             android:text="@string/capture"
             android:textColor="?attr/background"

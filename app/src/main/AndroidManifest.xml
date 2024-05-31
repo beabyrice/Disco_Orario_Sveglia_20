@@ -52,6 +52,8 @@
         <service android:name=".alarm.CountDownTimerService"
             android:foregroundServiceType="specialUse"/>
 
+        <receiver android:name=".alarm.StopVibrationReceiver" />
+
         <provider
             android:authorities="uni.project.disco_orario_sveglia_20.FileProvider"
             android:name="androidx.core.content.FileProvider"

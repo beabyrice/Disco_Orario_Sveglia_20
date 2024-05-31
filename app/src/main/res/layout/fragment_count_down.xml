@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="20dp"
+        android:layout_margin="@dimen/margin_small_mid"
         android:orientation="vertical">
 
         <TextView
@@ -18,10 +18,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/margin_very_small"
             android:text="@string/arrival"
             android:textColor="?attr/colorPrimary"
-            android:textSize="32sp"
+            android:textSize="@dimen/font_size_big_small"
             android:textStyle="bold" />
 
         <TextView
@@ -29,10 +29,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/margin_very_small"
             android:text=""
             android:textColor="?attr/colorPrimary"
-            android:textSize="32sp"
+            android:textSize="@dimen/font_size_big_small"
             android:textStyle="bold" />
 
         <TextView
@@ -40,18 +40,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/margin_very_small"
             android:text="@string/expiring"
             android:textAlignment="center"
             android:textColor="?attr/colorPrimary"
-            android:textSize="24sp"
+            android:textSize="@dimen/font_size_mid_big"
             android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/imageView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/margin_very_small"
             android:src="@drawable/baseline_alarm_on_24" />
 
         <TextView
@@ -59,20 +59,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/margin_very_small"
             android:textColor="?attr/colorPrimary"
             android:textColorHint="?attr/colorPrimary"
             android:textColorLink="?attr/colorPrimary"
-            android:textSize="34sp"
+            android:textSize="@dimen/font_size_big_small"
             android:textStyle="bold" />
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="139dp"
+            android:layout_width="@dimen/height_very_big"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/margin_very_small"
             android:indeterminate="false"
             android:minWidth="60dip" />
 
@@ -81,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="20dp"
+            android:layout_margin="@dimen/margin_small_mid"
             android:backgroundTint="?attr/colorAccent"
             android:text="@string/delete"
             android:textColor="?attr/background"

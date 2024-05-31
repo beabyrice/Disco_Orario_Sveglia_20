@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setUpViews()
 
-
         val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         sharedPref.edit().putBoolean("hasAlreadyRun", false).apply()
 

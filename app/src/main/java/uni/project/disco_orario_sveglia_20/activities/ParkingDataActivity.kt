@@ -25,7 +25,6 @@ class ParkingDataActivity : AppCompatActivity() {
         setContentView(binding.root)
         parkingViewModel.getParking()
 
-
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.homeNavHostFragment) as NavHostFragment
         val navController = navHostFragment.findNavController()
         binding.bottomNavigationView.setupWithNavController(navController)
@@ -38,9 +37,9 @@ class ParkingDataActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         parkingViewModel.deleteImageFile(this)
+        stopService(Intent(this, CountDownTimerService::class.java))
         val sharedPref = getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
         sharedPref.edit().putBoolean("hasAlreadyRun", false).apply()
-        stopService(Intent(this, CountDownTimerService::class.java))
     }
 
     override fun onRequestPermissionsResult(

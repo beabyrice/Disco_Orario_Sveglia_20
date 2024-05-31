@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Car Alarm</string>
-    <string name="insert_values_to_start">Inserire gli orari per iniziare</string>
+    <string name="app_name">Parking time</string>
+    <string name="insert_values_to_start">Inserisci gli orari per iniziare</string>
     <string name="welcome">Benvenuto!</string>
     <string name="auto">A</string>
     <string name="manual">M</string>

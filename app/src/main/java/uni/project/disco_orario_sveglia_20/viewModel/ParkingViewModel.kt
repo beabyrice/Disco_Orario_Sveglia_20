@@ -26,9 +26,8 @@ class ParkingViewModel(
     app: Application,
 ) : AndroidViewModel(app) {
 
-    private val repository = ParkingRepository(app)
-
     private val CAMERA_CODE = 2
+    private val repository = ParkingRepository(app)
     private var parkingFlow = MutableStateFlow<Parking?>(null)
     private val parking = parkingFlow.asStateFlow()
 

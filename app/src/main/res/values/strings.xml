@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Car Alarm</string>
+    <string name="app_name">Parking time</string>
     <string name="insert_values_to_start">Insert values to start</string>
     <string name="welcome">Welcome!</string>
     <string name="auto">A</string>

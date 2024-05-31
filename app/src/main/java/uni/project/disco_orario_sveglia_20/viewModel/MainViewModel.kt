@@ -32,10 +32,9 @@ class MainViewModel(
 
     private val FINE_PERMISSION_CODE = 1
     lateinit var currentLocation : LatLng
+
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
     private lateinit var locationRequest: LocationRequest
-
     private lateinit var locationCallback: LocationCallback
 
     private var currentTime = 0L
@@ -69,8 +68,6 @@ class MainViewModel(
         ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), FINE_PERMISSION_CODE)
         return
     }
-
-
 
     fun getLocationUpdate(activity: Activity) {
         if(ActivityCompat.checkSelfPermission(
