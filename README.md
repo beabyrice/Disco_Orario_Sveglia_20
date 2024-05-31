@@ -1,6 +1,6 @@
 Tutte le richieste per questa applicazione sono state realizzate.
 
-Ho implementsto la sveglia con vibrazione attraverso l'invio di una notifica finale che denota il termine del timer. 
+Ho implementato la sveglia con vibrazione attraverso l'invio di una notifica finale che denota il termine del timer. 
 
 Ho provato a fare in modo che la vibrazione si fermasse al tocco della notifica, come si vede nel codice del file CountDownTimerService.kt, e ho lasciato la logica. 
 Purtroppo non funziona anche provando in altri modi e non ho trovato la soluzione in nessuna documentazione. 
